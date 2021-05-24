@@ -19,7 +19,7 @@ from websockets import ConnectionClosedOK, WebSocketException, WebSocketServerPr
 from deafwave.cmds.init_funcs import deafwave_init
 from deafwave.daemon.windows_signal import kill
 from deafwave.server.server import ssl_context_for_root, ssl_context_for_server
-from deafwave.ssl.create_ssl import get_mozzila_ca_crt
+from deafwave.ssl.create_ssl import get_mozilla_ca_crt
 from deafwave.util.deafwave_logging import initialize_logging
 from deafwave.util.config import load_config, save_config
 from deafwave.util.json_util import dict_to_json_str
@@ -52,8 +52,8 @@ service_plotter = "deafwave plots create"
 async def fetch(url: str):
     async with ClientSession() as session:
         try:
-            mozzila_root = get_mozzila_ca_crt()
-            ssl_context = ssl_context_for_root(mozzila_root)
+            mozilla_root = get_mozilla_ca_crt()
+            ssl_context = ssl_context_for_root(mozilla_root)
             response = await session.get(url, ssl=ssl_context)
             if not response.ok:
                 log.warning("Response not OK.")
