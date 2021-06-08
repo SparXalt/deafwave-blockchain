@@ -32,10 +32,12 @@ network_overrides: &network_overrides
   config:
     mainnet:
       address_prefix: "zzz"
+      default_full_node_port: 8620
     testnet0:
       address_prefix: "tzzz"
     testnet3:
       address_prefix: "tzzz"
+      default_full_node_port: 58620
 
 selected_network: &selected_network "mainnet"
 ALERTS_URL: https://storage.googleapis.com/download.deafwave.net/notify/testnet_alert3.txt
