@@ -479,6 +479,8 @@ class Blockchain(BlockchainInterface):
                     self.constants)
                 # Start from the most recent
                 for rc in reversed(curr.finished_reward_slot_hashes):
+                    if sub_slot_total_iters < curr.sub_slot_iters:
+                        break
                     recent_rc.append((rc, sub_slot_total_iters))
                     sub_slot_total_iters = uint128(
                         sub_slot_total_iters - curr.sub_slot_iters)
@@ -635,6 +637,8 @@ class Blockchain(BlockchainInterface):
             # remove height from heights in cache
             del self.__heights_in_cache[uint32(height)]
 
+            if height == 0:
+                break
             height = height - 1
             blocks_to_remove = self.__heights_in_cache.get(
                 uint32(height), None)

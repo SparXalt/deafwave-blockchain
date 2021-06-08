@@ -331,7 +331,9 @@ class WalletBlockchain(BlockchainInterface):
             # Changes the peak to be the new peak
             await self.block_store.set_peak(block_record.header_hash)
             self._peak_height = block_record.height
-            return uint32(min(fork_h, 0))
+            if fork_h < 0:
+                return None
+            return uint32(fork_h)
 
         # This is not a heavier block than the heaviest we have seen, so we don't change the coin set
         return None
@@ -420,6 +422,8 @@ class WalletBlockchain(BlockchainInterface):
             # remove height from heights in cache
             del self.__heights_in_cache[uint32(height)]
 
+            if height == 0:
+                break
             height -= 1
             blocks_to_remove = self.__heights_in_cache.get(
                 uint32(height), None)
