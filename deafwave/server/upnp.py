@@ -28,11 +28,12 @@ class UPnP:
                     msg = self.queue.get()
                     if msg[0] == "remap":
                         port = msg[1]
-                        log.info(
-                            f"Attempting to enable UPnP (open up port {port})")
-                        self.upnp.deleteportmapping(port, "TCP")
-                        self.upnp.addportmapping(
-                            port, "TCP", self.upnp.lanaddr, port, "deafwave", "")
+                        log.info(f"Attempting to enable UPnP (open up port {port})")
+                        try:
+                            self.upnp.deleteportmapping(port, "TCP")
+                        except Exception as e:
+                            log.info(f"Removal of previous portmapping failed. This does not indicate an error: {e}")
+                        self.upnp.addportmapping(port, "TCP", self.upnp.lanaddr, port, "deafwave", "")
                         log.info(
                             f"Port {port} opened with UPnP. lanaddr {self.upnp.lanaddr} "
                             f"external: {self.upnp.externalipaddress()}"
