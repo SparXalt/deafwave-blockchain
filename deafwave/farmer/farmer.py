@@ -109,6 +109,7 @@ class Farmer:
 
     async def on_connect(self, peer: WSDeafwaveConnection):
         # Sends a handshake to the harvester
+        self.state_changed("add_connection", {})
         handshake = harvester_protocol.HarvesterHandshake(
             self.get_public_keys(),
             self.pool_public_keys,
