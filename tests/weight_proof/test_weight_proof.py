@@ -18,7 +18,7 @@ from deafwave.server.start_full_node import SERVICE_NAME
 from deafwave.types.blockchain_format.sized_bytes import bytes32
 from deafwave.types.blockchain_format.sub_epoch_summary import SubEpochSummary
 from deafwave.util.block_cache import BlockCache
-from deafwave.util.block_tools import test_constants
+from tests.block_tools import test_constants
 from deafwave.util.config import load_config
 from deafwave.util.default_root import DEFAULT_ROOT_PATH
 from deafwave.util.generator_tools import get_block_header

@@ -14,7 +14,7 @@ from deafwave.rpc.harvester_rpc_client import HarvesterRpcClient
 from deafwave.rpc.rpc_server import start_rpc_server
 from deafwave.types.blockchain_format.sized_bytes import bytes32
 from deafwave.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
-from deafwave.util.block_tools import get_plot_dir
+from tests.block_tools import get_plot_dir
 from deafwave.util.config import load_config
 from deafwave.util.hash import std_hash
 from deafwave.util.ints import uint8, uint16, uint32, uint64

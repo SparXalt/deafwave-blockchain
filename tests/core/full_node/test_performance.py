@@ -17,7 +17,7 @@ from deafwave.types.condition_with_args import ConditionWithArgs
 from deafwave.types.unfinished_block import UnfinishedBlock
 from deafwave.util.clvm import int_to_bytes
 from deafwave.util.ints import uint64
-from deafwave.util.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from tests.core.fixtures import empty_blockchain  # noqa: F401
 
 from tests.connection_utils import add_dummy_connection, connect_and_get_peer

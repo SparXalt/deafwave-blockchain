@@ -30,14 +30,14 @@ from deafwave.types.mempool_inclusion_status import MempoolInclusionStatus
 from deafwave.types.peer_info import PeerInfo, TimestampedPeerInfo
 from deafwave.types.spend_bundle import SpendBundle
 from deafwave.types.unfinished_block import UnfinishedBlock
-from deafwave.util.block_tools import get_signage_point
+from tests.block_tools import get_signage_point
 from deafwave.util.clvm import int_to_bytes
 from deafwave.util.errors import Err
 from deafwave.util.hash import std_hash
 from deafwave.util.ints import uint8, uint16, uint32, uint64
 from deafwave.util.recursive_replace import recursive_replace
 from deafwave.util.vdf_prover import get_vdf_info_and_proof
-from deafwave.util.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from tests.core.fixtures import empty_blockchain  # noqa: F401
 from deafwave.wallet.cc_wallet.cc_wallet import CCWallet
 from deafwave.wallet.transaction_record import TransactionRecord

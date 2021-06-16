@@ -22,7 +22,7 @@ from deafwave.types.coin_solution import CoinSolution
 from deafwave.types.condition_opcodes import ConditionOpcode
 from deafwave.types.full_block import FullBlock
 from deafwave.types.spend_bundle import SpendBundle
-from deafwave.util.block_tools import BlockTools, test_constants
+from tests.block_tools import BlockTools, test_constants
 from deafwave.util.errors import Err
 
 from .ram_db import create_ram_blockchain

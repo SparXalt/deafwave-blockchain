@@ -15,7 +15,7 @@ from deafwave.protocols.timelord_protocol import NewInfusionPointVDF
 from deafwave.types.blockchain_format.sized_bytes import bytes32
 from deafwave.types.unfinished_block import UnfinishedBlock
 from deafwave.util.block_cache import BlockCache
-from deafwave.util.block_tools import get_signage_point
+from tests.block_tools import get_signage_point
 from deafwave.util.hash import std_hash
 from deafwave.util.ints import uint8, uint32, uint64, uint128
 from tests.core.fixtures import default_1000_blocks, empty_blockchain  # noqa: F401

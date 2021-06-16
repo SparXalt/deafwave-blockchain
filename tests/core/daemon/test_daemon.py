@@ -6,7 +6,7 @@ import pytest
 from deafwave.server.outbound_message import NodeType
 from deafwave.server.server import ssl_context_for_server
 from deafwave.types.peer_info import PeerInfo
-from deafwave.util.block_tools import BlockTools
+from tests.block_tools import BlockTools
 from deafwave.util.ints import uint16
 from deafwave.util.ws_message import create_payload
 from tests.core.node_height import node_height_at_least

@@ -18,7 +18,7 @@ from deafwave.types.full_block import FullBlock
 from deafwave.types.generator_types import BlockGenerator
 from deafwave.util.generator_tools import tx_removals_and_additions
 from deafwave.util.ints import uint64, uint32
-from deafwave.util.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from deafwave.util.db_wrapper import DBWrapper
 from tests.setup_nodes import bt, test_constants
 

@@ -12,7 +12,7 @@ from deafwave.types.condition_with_args import ConditionWithArgs
 from deafwave.types.spend_bundle import SpendBundle
 from deafwave.util.errors import ConsensusError, Err
 from deafwave.util.ints import uint64
-from deafwave.util.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from tests.core.full_node.test_full_node import connect_and_get_peer
 from tests.setup_nodes import bt, setup_two_nodes, test_constants
 from tests.util.generator_tools_testing import run_and_get_removals_and_additions

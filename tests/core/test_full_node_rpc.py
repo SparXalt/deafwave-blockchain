@@ -11,7 +11,7 @@ from deafwave.types.spend_bundle import SpendBundle
 from deafwave.types.unfinished_block import UnfinishedBlock
 from deafwave.util.hash import std_hash
 from deafwave.util.ints import uint16
-from deafwave.util.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from tests.setup_nodes import bt, self_hostname, setup_simulators_and_wallets, test_constants
 from tests.time_out_assert import time_out_assert
 

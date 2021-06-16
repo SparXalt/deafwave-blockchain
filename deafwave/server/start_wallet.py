@@ -8,7 +8,6 @@ from deafwave.rpc.wallet_rpc_api import WalletRpcApi
 from deafwave.server.outbound_message import NodeType
 from deafwave.server.start_service import run_service
 from deafwave.types.peer_info import PeerInfo
-from deafwave.util.block_tools import test_constants
 from deafwave.util.config import load_config_cli, load_config
 from deafwave.util.default_root import DEFAULT_ROOT_PATH
 from deafwave.util.keychain import Keychain
@@ -82,6 +81,8 @@ def main() -> None:
     # This is simulator
     local_test = config["testing"]
     if local_test is True:
+        from tests.block_tools import test_constants
+
         constants = test_constants
         current = config["database_path"]
         config["database_path"] = f"{current}_simulation"

@@ -6,7 +6,7 @@ from deafwave.full_node.full_node import FullNode
 from deafwave.rpc.full_node_rpc_api import FullNodeRpcApi
 from deafwave.server.outbound_message import NodeType
 from deafwave.server.start_service import run_service
-from deafwave.util.block_tools import BlockTools, test_constants
+from tests.block_tools import BlockTools, test_constants
 from deafwave.util.config import load_config_cli
 from deafwave.util.default_root import DEFAULT_ROOT_PATH
 from deafwave.util.path import mkdir, path_from_root

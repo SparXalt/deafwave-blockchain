@@ -18,7 +18,7 @@ from deafwave.simulator.start_simulator import service_kwargs_for_full_node_simu
 from deafwave.timelord.timelord_launcher import kill_processes, spawn_process
 from deafwave.types.peer_info import PeerInfo
 from deafwave.util.bech32m import encode_puzzle_hash
-from deafwave.util.block_tools import BlockTools, test_constants
+from tests.block_tools import BlockTools, test_constants
 from deafwave.util.hash import std_hash
 from deafwave.util.ints import uint16, uint32
 from deafwave.util.keychain import Keychain, bytes_to_mnemonic
