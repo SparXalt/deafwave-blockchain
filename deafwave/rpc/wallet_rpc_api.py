@@ -22,6 +22,7 @@ from deafwave.util.path import path_from_root
 from deafwave.util.ws_message import WsRpcMessage, create_payload_dict
 from deafwave.wallet.cc_wallet.cc_wallet import CCWallet
 from deafwave.wallet.rl_wallet.rl_wallet import RLWallet
+from deafwave.wallet.derive_keys import master_sk_to_farmer_sk, master_sk_to_pool_sk
 from deafwave.wallet.did_wallet.did_wallet import DIDWallet
 from deafwave.wallet.trade_record import TradeRecord
 from deafwave.wallet.transaction_record import TransactionRecord
@@ -204,6 +205,8 @@ class WalletRpcApi:
                     "fingerprint": fingerprint,
                     "sk": bytes(sk).hex(),
                     "pk": bytes(sk.get_g1()).hex(),
+                    "farmer_pk": bytes(master_sk_to_farmer_sk(sk).get_g1()).hex(),
+                    "pool_pk": bytes(master_sk_to_pool_sk(sk).get_g1()).hex(),
                     "seed": s,
                 },
             }
