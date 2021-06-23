@@ -103,12 +103,14 @@ class TestCoinStore:
                 should_be_included.add(pool_coin)
                 if block.is_transaction_block():
                     if block.transactions_generator is not None:
-                        block_gen: BlockGenerator = BlockGenerator(
-                            block.transactions_generator, [])
+                        block_gen: BlockGenerator = BlockGenerator(block.transactions_generator, [])
                         npc_result = get_name_puzzle_conditions(
-                            block_gen, bt.constants.MAX_BLOCK_COST_CLVM, False)
-                        tx_removals, tx_additions = tx_removals_and_additions(
-                            npc_result.npc_list)
+                            block_gen,
+                            bt.constants.MAX_BLOCK_COST_CLVM,
+                            cost_per_byte=bt.constants.COST_PER_BYTE,
+                            safe_mode=False,
+                        )
+                        tx_removals, tx_additions = tx_removals_and_additions(npc_result.npc_list)
                     else:
                         tx_removals, tx_additions = [], []
 
