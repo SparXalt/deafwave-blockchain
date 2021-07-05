@@ -7,7 +7,7 @@ import pytest
 from clvm import SExp
 from clvm.EvalError import EvalError
 
-import chia.server.ws_connection as ws
+import deafwave.server.ws_connection as ws
 
 from deafwave.full_node.mempool import Mempool
 from deafwave.full_node.full_node_api import FullNodeAPI
