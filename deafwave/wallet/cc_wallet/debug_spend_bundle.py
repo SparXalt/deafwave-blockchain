@@ -64,8 +64,7 @@ def debug_spend_bundle(spend_bundle: SpendBundle) -> None:
         print(f"consuming coin {dump_coin(coin)}")
         print(f"  with id {coin_name}")
         print()
-        print(
-            f"\nbrun -y main.sym '{bu_disassemble(puzzle_reveal)}' '{bu_disassemble(solution)}'")
+        print(f"\nbrun -y main.sym '{bu_disassemble(puzzle_reveal)}' '{bu_disassemble(solution)}'")
         error, conditions, cost = conditions_dict_for_solution(
             puzzle_reveal, solution, INFINITE_COST)
         if error:
@@ -143,8 +142,7 @@ def debug_spend_bundle(spend_bundle: SpendBundle) -> None:
     print()
     print(f"zero_coin_set = {sorted(zero_coin_set)}")
     print()
-    print(
-        f"created announcements = {sorted([_[-1] for _ in created_announcement_pairs])}")
+    print(f"created announcements = {sorted([_[-1] for _ in created_announcement_pairs])}")
     print()
     print(f"asserted announcements = {sorted(asserted_annoucements)}")
     print()

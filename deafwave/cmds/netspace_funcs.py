@@ -65,8 +65,7 @@ async def netstorge_async(rpc_port: int, delta_block_height: str, start: str) ->
 
     except Exception as e:
         if isinstance(e, aiohttp.ClientConnectorError):
-            print(
-                f"Connection error. Check if full node rpc is running at {rpc_port}")
+            print(f"Connection error. Check if full node rpc is running at {rpc_port}")
         else:
             print(f"Exception {e}")
 

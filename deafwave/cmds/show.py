@@ -63,12 +63,10 @@ async def show_async(
                 print("Current Blockchain Status: Full Node Synced")
                 print("\nPeak: Hash:", peak.header_hash if peak is not None else "")
             elif peak is not None:
-                print(
-                    f"Current Blockchain Status: Not Synced. Peak height: {peak.height}")
+                print(f"Current Blockchain Status: Not Synced. Peak height: {peak.height}")
             else:
                 print("\nSearching for an initial chain\n")
-                print(
-                    "You may be able to expedite with 'deafwave show -a host:port' using a known node.\n")
+                print("You may be able to expedite with 'deafwave show -a host:port' using a known node.\n")
 
             if peak is not None:
                 if peak.is_transaction_block:
@@ -195,8 +193,7 @@ async def show_async(
         if block_header_hash_by_height != "":
             block_header = await client.get_block_record_by_height(block_header_hash_by_height)
             if block_header is not None:
-                print(
-                    f"Header hash of block {block_header_hash_by_height}: " f"{block_header.header_hash.hex()}")
+                print(f"Header hash of block {block_header_hash_by_height}: " f"{block_header.header_hash.hex()}")
             else:
                 print("Block height", block_header_hash_by_height, "not found")
         if block_by_header_hash != "":
@@ -267,8 +264,7 @@ async def show_async(
 
     except Exception as e:
         if isinstance(e, aiohttp.ClientConnectorError):
-            print(
-                f"Connection error. Check if full node rpc is running at {rpc_port}")
+            print(f"Connection error. Check if full node rpc is running at {rpc_port}")
             print("This is normal if full node is still starting up")
         else:
             tb = traceback.format_exc()

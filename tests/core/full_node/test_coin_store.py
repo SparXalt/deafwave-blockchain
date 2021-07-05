@@ -277,8 +277,7 @@ class TestCoinStore:
 
                 for reorg_block in blocks_reorg_chain:
                     result, error_code, _ = await b.receive_block(reorg_block)
-                    print(
-                        f"Height {reorg_block.height} {initial_block_count - 10} result {result}")
+                    print(f"Height {reorg_block.height} {initial_block_count - 10} result {result}")
                     if reorg_block.height < initial_block_count - 10:
                         assert result == ReceiveBlockResult.ALREADY_HAVE_BLOCK
                     elif reorg_block.height < initial_block_count - 1:

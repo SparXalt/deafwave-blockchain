@@ -76,10 +76,7 @@ def show_all_keys(show_mnemonic: bool):
         print("")
         print("Fingerprint:", sk.get_g1().get_fingerprint())
         print("Master public key (m):", sk.get_g1())
-        print(
-            "Farmer public key (m/12381/8444/0/0):",
-            master_sk_to_farmer_sk(sk).get_g1(),
-        )
+        print("Farmer public key (m/12381/8444/0/0):", master_sk_to_farmer_sk(sk).get_g1())
         print("Pool public key (m/12381/8444/1/0):",
               master_sk_to_pool_sk(sk).get_g1())
         print(
@@ -90,10 +87,7 @@ def show_all_keys(show_mnemonic: bool):
         assert seed is not None
         if show_mnemonic:
             print("Master private key (m):", bytes(sk).hex())
-            print(
-                "First wallet secret key (m/12381/8444/2/0):",
-                master_sk_to_wallet_sk(sk, uint32(0)),
-            )
+            print("First wallet secret key (m/12381/8444/2/0):", master_sk_to_wallet_sk(sk, uint32(0)))
             mnemonic = bytes_to_mnemonic(seed)
             print("  Mnemonic seed (24 secret words):")
             print(mnemonic)

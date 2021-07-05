@@ -62,8 +62,7 @@ class TestWalletSimulator:
 
         funds = sum(
             [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
+                calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
                 for i in range(1, num_blocks + 2)
             ]
         )

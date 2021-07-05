@@ -45,8 +45,7 @@ def main():
         original_minor_ver_list = scm_minor_version.split("0rc")
         # decrement the major release for release candidate
         major_release_number = str(1 - int(scm_major_version))
-        minor_release_number = str(
-            int(scm_major_version) + 1)  # RC is 0.2.1 for RC 1
+        minor_release_number = str(int(scm_major_version) + 1)  # RC is 0.2.1 for RC 1
         patch_release_number = original_minor_ver_list[1]
         if smc_patch_version and "dev" in smc_patch_version:
             dev_release_number = "." + smc_patch_version

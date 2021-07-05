@@ -26,8 +26,7 @@ def print_transaction(tx: TransactionRecord, verbose: bool, name) -> None:
         deafwave_amount = Decimal(int(tx.amount)) / units["deafwave"]
         to_address = encode_puzzle_hash(tx.to_puzzle_hash, name)
         print(f"Transaction {tx.name}")
-        print(
-            f"Status: {'Confirmed' if tx.confirmed else ('In mempool' if tx.is_in_mempool() else 'Pending')}")
+        print(f"Status: {'Confirmed' if tx.confirmed else ('In mempool' if tx.is_in_mempool() else 'Pending')}")
         print(f"Amount: {deafwave_amount} {name}")
         print(f"To address: {to_address}")
         print("Created at:", datetime.fromtimestamp(
@@ -101,13 +100,11 @@ async def send(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> 
         tx = await wallet_client.get_transaction(wallet_id, tx_id)
         if len(tx.sent_to) > 0:
             print(f"Transaction submitted to nodes: {tx.sent_to}")
-            print(
-                f"Do deafwave wallet get_transaction -f {fingerprint} -tx 0x{tx_id} to get status")
+            print(f"Do deafwave wallet get_transaction -f {fingerprint} -tx 0x{tx_id} to get status")
             return None
 
     print("Transaction not yet submitted to nodes")
-    print(
-        f"Do 'deafwave wallet get_transaction -f {fingerprint} -tx 0x{tx_id}' to get status")
+    print(f"Do 'deafwave wallet get_transaction -f {fingerprint} -tx 0x{tx_id}' to get status")
 
 
 async def get_address(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
@@ -130,12 +127,9 @@ async def print_balances(args: dict, wallet_client: WalletRpcClient, fingerprint
         typ = WalletType(int(summary["type"])).name
         if typ != "STANDARD_WALLET":
             print(f"Wallet ID {wallet_id} type {typ} {summary['name']}")
-            print(
-                f"   -Total Balance: " f"{balances['confirmed_wallet_balance']/units['colouredcoin']}")
-            print(
-                f"   -Pending Total Balance: {balances['unconfirmed_wallet_balance']/units['colouredcoin']}")
-            print(
-                f"   -Spendable Balance: {balances['spendable_balance']/units['colouredcoin']}")
+            print(f"   -Total Balance: " f"{balances['confirmed_wallet_balance']/units['colouredcoin']}")
+            print(f"   -Pending Total Balance: {balances['unconfirmed_wallet_balance']/units['colouredcoin']}")
+            print(f"   -Spendable Balance: {balances['spendable_balance']/units['colouredcoin']}")
         else:
             print(f"Wallet ID {wallet_id} type {typ}")
             print(
@@ -191,8 +185,7 @@ async def get_wallet(wallet_client: WalletRpcClient, fingerprint: int = None) ->
             use_cloud = True
             if "backup_path" in log_in_response:
                 path = log_in_response["backup_path"]
-                print(
-                    f"Backup file from backup.deafwave.net downloaded and written to: {path}")
+                print(f"Backup file from backup.deafwave.net downloaded and written to: {path}")
                 val = input(
                     "Do you want to use this file to restore from backup? (Y/N) ")
                 if val.lower() == "y":
@@ -245,8 +238,7 @@ async def execute_with_wallet(wallet_rpc_port: int, fingerprint: int, extra_para
         pass
     except Exception as e:
         if isinstance(e, aiohttp.ClientConnectorError):
-            print(
-                f"Connection error. Check if wallet is running at {wallet_rpc_port}")
+            print(f"Connection error. Check if wallet is running at {wallet_rpc_port}")
         else:
             print(f"Exception from 'wallet' {e}")
     wallet_client.close()
