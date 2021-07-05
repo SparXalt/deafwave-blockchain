@@ -47,12 +47,10 @@ class ReceiveBlockResult(Enum):
     """
 
     NEW_PEAK = 1  # Added to the peak of the blockchain
-    # Added as an orphan/stale block (not a new peak of the chain)
-    ADDED_AS_ORPHAN = 2
+    ADDED_AS_ORPHAN = 2  # Added as an orphan/stale block (not a new peak of the chain)
     INVALID_BLOCK = 3  # Block was not added because it was invalid
     ALREADY_HAVE_BLOCK = 4  # Block is already present in this blockchain
-    # Block's parent (previous pointer) is not in this blockchain
-    DISCONNECTED_BLOCK = 5
+    DISCONNECTED_BLOCK = 5  # Block's parent (previous pointer) is not in this blockchain
 
 
 class Blockchain(BlockchainInterface):
