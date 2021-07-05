@@ -35,10 +35,10 @@ testnet_kwargs = {
     ),
     ## TODO: DELETE
     "GENESIS_PRE_FARM_POOL_PUZZLE_HASH": bytes.fromhex(
-        "95c259eaf17836095a7bfb5b1254b53c554985364c349f4a6764787c21d425ad"
+        "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
     ),
     "GENESIS_PRE_FARM_FARMER_PUZZLE_HASH": bytes.fromhex(
-        "95c259eaf17836095a7bfb5b1254b53c554985364c349f4a6764787c21d425ad"
+        "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
     ),
     "MAX_VDF_WITNESS_SIZE": 64,
     # Size of mempool = 50x the size of block
