@@ -6,9 +6,9 @@ from typing import List, Optional, Set, Tuple
 import aiosqlite
 import pytest
 
-from deafwave.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from deafwave.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward, calculate_postfarm_reward
 from deafwave.consensus.blockchain import Blockchain, ReceiveBlockResult
-from deafwave.consensus.coinbase import create_farmer_coin, create_pool_coin
+from deafwave.consensus.coinbase import create_farmer_coin, create_pool_coin, create_postfarm_coin
 from deafwave.full_node.block_store import BlockStore
 from deafwave.full_node.coin_store import CoinStore
 from deafwave.full_node.mempool_check_conditions import get_name_puzzle_conditions
@@ -39,11 +39,15 @@ log = logging.getLogger(__name__)
 def get_future_reward_coins(block: FullBlock) -> Tuple[Coin, Coin]:
     pool_amount = calculate_pool_reward(block.height)
     farmer_amount = calculate_base_farmer_reward(block.height)
+    postfarm_amount = calculate_postfarm_reward(block.height)
     if block.is_transaction_block():
         assert block.transactions_info is not None
         farmer_amount = uint64(farmer_amount + block.transactions_info.fees)
     pool_coin: Coin = create_pool_coin(
-        block.height, block.foliage.foliage_block_data.pool_target.puzzle_hash, pool_amount, constants.GENESIS_CHALLENGE
+        block.height,
+        block.foliage.foliage_block_data.pool_target.puzzle_hash,
+        pool_amount,
+        constants.GENESIS_CHALLENGE
     )
     farmer_coin: Coin = create_farmer_coin(
         block.height,
@@ -51,7 +55,13 @@ def get_future_reward_coins(block: FullBlock) -> Tuple[Coin, Coin]:
         farmer_amount,
         constants.GENESIS_CHALLENGE,
     )
-    return pool_coin, farmer_coin
+    postfarm_coin: Coin = create_postfarm_coin(
+        block.height,
+        constants.GENESIS_POST_FARM_PUZZLE_HASH,
+        postfarm_amount,
+        constants.GENESIS_CHALLENGE
+    )
+    return pool_coin, farmer_coin, postfarm_coin
 
 
 class TestCoinStore:
@@ -98,9 +108,10 @@ class TestCoinStore:
             should_be_included_prev: Set[Coin] = set()
             should_be_included: Set[Coin] = set()
             for block in blocks:
-                farmer_coin, pool_coin = get_future_reward_coins(block)
+                farmer_coin, pool_coin, postfarm_coin = get_future_reward_coins(block)
                 should_be_included.add(farmer_coin)
                 should_be_included.add(pool_coin)
+                should_be_included.add(postfarm_coin)
                 if block.is_transaction_block():
                     if block.transactions_generator is not None:
                         block_gen: BlockGenerator = BlockGenerator(block.transactions_generator, [])

@@ -26,9 +26,9 @@ from deafwave.full_node.mempool_check_conditions import GENERATOR_MOD
 from deafwave.plotting.create_plots import create_plots
 from deafwave.consensus.block_creation import unfinished_block_to_full_block
 from deafwave.consensus.block_record import BlockRecord
-from deafwave.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from deafwave.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward, calculate_postfarm_reward
 from deafwave.consensus.blockchain_interface import BlockchainInterface
-from deafwave.consensus.coinbase import create_puzzlehash_for_pk, create_farmer_coin, create_pool_coin
+from deafwave.consensus.coinbase import create_postfarm_coin, create_puzzlehash_for_pk, create_farmer_coin, create_pool_coin
 from deafwave.consensus.constants import ConsensusConstants
 from deafwave.consensus.default_constants import DEFAULT_CONSTANTS
 from deafwave.consensus.deficit import calculate_deficit
@@ -1616,8 +1616,15 @@ def create_test_foliage(
                 uint64(calculate_base_farmer_reward(curr.height) + curr.fees),
                 constants.GENESIS_CHALLENGE,
             )
+
+            postfarm_coin = create_postfarm_coin(
+                curr.height,
+                constants.GENESIS_POST_FARM_PUZZLE_HASH,
+                calculate_postfarm_reward(curr.height),
+                constants.GENESIS_CHALLENGE,
+            )
             assert curr.header_hash == prev_transaction_block.header_hash
-            reward_claims_incorporated += [pool_coin, farmer_coin]
+            reward_claims_incorporated += [pool_coin, farmer_coin, postfarm_coin]
 
             if curr.height > 0:
                 curr = blocks.block_record(curr.prev_hash)
