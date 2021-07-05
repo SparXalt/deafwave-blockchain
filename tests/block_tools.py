@@ -1642,7 +1642,13 @@ def create_test_foliage(
                         calculate_base_farmer_reward(curr.height),
                         constants.GENESIS_CHALLENGE,
                     )
-                    reward_claims_incorporated += [pool_coin, farmer_coin]
+                    postfarm_coin = create_postfarm_coin(
+                        curr.height,
+                        constants.GENESIS_POST_FARM_PUZZLE_HASH,
+                        calculate_postfarm_reward(curr.height),
+                        constants.GENESIS_CHALLENGE,
+                    )
+                    reward_claims_incorporated += [pool_coin, farmer_coin, postfarm_coin]
                     curr = blocks.block_record(curr.prev_hash)
         additions.extend(reward_claims_incorporated.copy())
         for coin in additions:
