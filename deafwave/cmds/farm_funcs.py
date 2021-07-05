@@ -255,8 +255,8 @@ async def summary(rpc_port: int, wallet_rpc_port: int, harvester_rpc_port: int, 
 
     if amounts is None:
         if wallet_not_running:
-            print("For details on farmed rewards and fees you should run 'chia start wallet' and 'chia wallet show'")
+            print("For details on farmed rewards and fees you should run 'deafwave start wallet' and 'deafwave wallet show'")
         elif wallet_not_ready:
-            print("For details on farmed rewards and fees you should run 'chia wallet show'")
+            print("For details on farmed rewards and fees you should run 'deafwave wallet show'")
     else:
-        print("Note: log into your key using 'chia wallet show' to see rewards for each key")
+        print("Note: log into your key using 'deafwave wallet show' to see rewards for each key")
