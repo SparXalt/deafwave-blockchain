@@ -78,17 +78,12 @@ def _get_second_to_last_transaction_block_in_previous_epoch(
         constants.MIN_BLOCKS_PER_CHALLENGE_BLOCK + 5
     )
 
-    if (height_in_next_epoch >= constants.DIFFICULTY_CHANGE_BLOCK) :
-        EPOCH_BLOCKS = constants.EPOCH_BLOCKS
-    else :
-        EPOCH_BLOCKS = constants.EPOCH_BLOCKS_INITIAL
-
     height_epoch_surpass: uint32 = uint32(
-        height_in_next_epoch - (height_in_next_epoch % EPOCH_BLOCKS))
+        height_in_next_epoch - (height_in_next_epoch % constants.EPOCH_BLOCKS))
     height_prev_epoch_surpass: uint32 = uint32(
-        height_epoch_surpass - EPOCH_BLOCKS)
+        height_epoch_surpass - constants.EPOCH_BLOCKS)
 
-    assert height_prev_epoch_surpass % EPOCH_BLOCKS == height_prev_epoch_surpass % EPOCH_BLOCKS == 0
+    assert height_prev_epoch_surpass % constants.EPOCH_BLOCKS == height_prev_epoch_surpass % EPOCH_BLOCKS == 0
 
     # Sanity check, don't go too far past epoch barrier
     assert (height_in_next_epoch - height_epoch_surpass) < (5 *
@@ -144,11 +139,7 @@ def _get_second_to_last_transaction_block_in_previous_epoch(
 
 
 def height_can_be_first_in_epoch(constants: ConsensusConstants, height: uint32) -> bool:
-    if (height >= constants.DIFFICULTY_CHANGE_BLOCK) :
-        EPOCH_BLOCKS = constants.EPOCH_BLOCKS
-    else :
-        EPOCH_BLOCKS = constants.EPOCH_BLOCKS_INITIAL
-    return (height - (height % constants.SUB_EPOCH_BLOCKS)) % EPOCH_BLOCKS == 0
+    return (height - (height % constants.SUB_EPOCH_BLOCKS)) % constants.EPOCH_BLOCKS == 0
 
 
 def can_finish_sub_and_full_epoch(
@@ -319,12 +310,7 @@ def _get_next_difficulty(
     """
     next_height: uint32 = uint32(height + 1)
 
-    if (next_height >= constants.DIFFICULTY_CHANGE_BLOCK) :
-        EPOCH_BLOCKS = constants.EPOCH_BLOCKS
-    else :
-        EPOCH_BLOCKS = constants.EPOCH_BLOCKS_INITIAL
-
-    if next_height < (EPOCH_BLOCKS - 3 * constants.MAX_SUB_SLOT_BLOCKS):
+    if next_height < (constants.EPOCH_BLOCKS - 3 * constants.MAX_SUB_SLOT_BLOCKS):
         # We are in the first epoch
         return uint64(constants.DIFFICULTY_STARTING)
 
