@@ -170,16 +170,12 @@ async def validate_block_body(
                 curr_b = blocks.block_record(curr_b.prev_hash)
 
     if set(block.transactions_info.reward_claims_incorporated) != expected_reward_coins:
-        log.error(f"CLAIMS:{block.transactions_info.reward_claims_incorporated}")
-        log.error(f"EXPECTED:{expected_reward_coins}")
-        log.error(f"DEAFWAVE: INVALID_REWARD_COINS_1")
         return Err.INVALID_REWARD_COINS, None
 
     if block.foliage_transaction_block.timestamp > constants.INITIAL_FREEZE_END_TIMESTAMP:
         if len(block.transactions_info.reward_claims_incorporated) != len(expected_reward_coins):
             # No duplicates, after transaction freeze period. Duplicates cause no issues because we filter them out
             # anyway.
-            log.error(f"DEAFWAVE: INVALID_REWARD_COINS_2")
             return Err.INVALID_REWARD_COINS, None
 
     removals: List[bytes32] = []
