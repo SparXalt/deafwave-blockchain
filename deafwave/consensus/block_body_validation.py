@@ -170,8 +170,8 @@ async def validate_block_body(
                 curr_b = blocks.block_record(curr_b.prev_hash)
 
     if set(block.transactions_info.reward_claims_incorporated) != expected_reward_coins:
-        log.error(f"{block.transactions_info.reward_claims_incorporated}")
-        log.error(f"{expected_reward_coins}")
+        log.error(f"CLAIMS:{block.transactions_info.reward_claims_incorporated}")
+        log.error(f"EXPECTED:{expected_reward_coins}")
         log.error(f"DEAFWAVE: INVALID_REWARD_COINS_1")
         return Err.INVALID_REWARD_COINS, None
 
