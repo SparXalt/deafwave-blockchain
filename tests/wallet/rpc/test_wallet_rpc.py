@@ -52,8 +52,10 @@ class TestWalletRpc:
             [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i)) for i in range(1, num_blocks)]
         )
         initial_funds_eventually = sum(
-            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
-             for i in range(1, num_blocks + 1)]
+            [
+                calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+                for i in range(1, num_blocks + 1)
+            ]
         )
 
         wallet_rpc_api = WalletRpcApi(wallet_node)
@@ -135,10 +137,8 @@ class TestWalletRpc:
             assert tx_res["success"]
             assert tx_res["signed_tx"]["fee_amount"] == 0
             assert tx_res["signed_tx"]["amount"] == signed_tx_amount
-            # The output and the change
-            assert len(tx_res["signed_tx"]["additions"]) == 2
-            assert any(
-                [addition["amount"] == signed_tx_amount for addition in tx_res["signed_tx"]["additions"]])
+            assert len(tx_res["signed_tx"]["additions"]) == 2  # The output and the change
+            assert any([addition["amount"] == signed_tx_amount for addition in tx_res["signed_tx"]["additions"]])
 
             push_res = await client_node.push_tx(SpendBundle.from_json_dict(tx_res["signed_tx"]["spend_bundle"]))
             assert push_res["success"]
@@ -160,24 +160,19 @@ class TestWalletRpc:
             assert coin_to_spend is not None
 
             tx_res = await client.create_signed_transaction(
-                [{"amount": 444, "puzzle_hash": ph_4}, {
-                    "amount": 999, "puzzle_hash": ph_5}],
+                [{"amount": 444, "puzzle_hash": ph_4}, {"amount": 999, "puzzle_hash": ph_5}],
                 coins=[coin_to_spend],
                 fee=100,
             )
             assert tx_res["success"]
             assert tx_res["signed_tx"]["fee_amount"] == 100
             assert tx_res["signed_tx"]["amount"] == 444 + 999
-            # The outputs and the change
-            assert len(tx_res["signed_tx"]["additions"]) == 3
-            assert any(
-                [addition["amount"] == 444 for addition in tx_res["signed_tx"]["additions"]])
-            assert any(
-                [addition["amount"] == 999 for addition in tx_res["signed_tx"]["additions"]])
+            assert len(tx_res["signed_tx"]["additions"]) == 3  # The outputs and the change
+            assert any([addition["amount"] == 444 for addition in tx_res["signed_tx"]["additions"]])
+            assert any([addition["amount"] == 999 for addition in tx_res["signed_tx"]["additions"]])
             assert (
                 sum([rem["amount"] for rem in tx_res["signed_tx"]["removals"]])
-                - sum([ad["amount"]
-                       for ad in tx_res["signed_tx"]["additions"]])
+                - sum([ad["amount"] for ad in tx_res["signed_tx"]["additions"]])
                 == 100
             )
 

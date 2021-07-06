@@ -40,8 +40,7 @@ class TestStreamable(unittest.TestCase):
             f: Optional[uint32]
             g: Tuple[uint32, str, bytes]
 
-        a = TestClass(24, 352, [1, 2, 4], [[1, 2, 3], [3, 4]],
-                      728, None, (383, "hello", b"goodbye"))  # type: ignore
+        a = TestClass(24, 352, [1, 2, 4], [[1, 2, 3], [3, 4]], 728, None, (383, "hello", b"goodbye"))  # type: ignore
 
         b: bytes = bytes(a)
         assert a == TestClass.from_bytes(b)
@@ -90,8 +89,7 @@ class TestStreamable(unittest.TestCase):
         tc1_b = TestClass1([uint32(4), uint32(5)])
         tc1_c = TestClass1([uint32(7), uint32(8)])
 
-        tc2 = TestClass2(
-            uint32(5), [[tc1_a], [tc1_b, tc1_c], None], bytes32(bytes([1] * 32)))
+        tc2 = TestClass2(uint32(5), [[tc1_a], [tc1_b, tc1_c], None], bytes32(bytes([1] * 32)))
         assert TestClass2.from_json_dict(tc2.to_json_dict()) == tc2
 
     def test_recursive_types(self):
@@ -102,8 +100,7 @@ class TestStreamable(unittest.TestCase):
 
     def test_ambiguous_deserialization_optionals(self):
         with raises(AssertionError):
-            SubEpochChallengeSegment.from_bytes(
-                b"\x00\x00\x00\x03\xff\xff\xff\xff")
+            SubEpochChallengeSegment.from_bytes(b"\x00\x00\x00\x03\xff\xff\xff\xff")
 
         @dataclass(frozen=True)
         @streamable
@@ -243,12 +240,10 @@ class TestStreamable(unittest.TestCase):
         assert parse_bytes(io.BytesIO(b"\x00\x00\x00\x01\xff")) == b"\xff"
 
         # 512 bytes
-        assert parse_bytes(io.BytesIO(
-            b"\x00\x00\x02\x00" + b"a" * 512)) == b"a" * 512
+        assert parse_bytes(io.BytesIO(b"\x00\x00\x02\x00" + b"a" * 512)) == b"a" * 512
 
         # 255 bytes
-        assert parse_bytes(io.BytesIO(
-            b"\x00\x00\x00\xff" + b"b" * 255)) == b"b" * 255
+        assert parse_bytes(io.BytesIO(b"\x00\x00\x00\xff" + b"b" * 255)) == b"b" * 255
 
         # EOF
         with raises(AssertionError):
@@ -267,10 +262,8 @@ class TestStreamable(unittest.TestCase):
     def test_parse_list(self):
 
         assert parse_list(io.BytesIO(b"\x00\x00\x00\x00"), parse_bool) == []
-        assert parse_list(io.BytesIO(b"\x00\x00\x00\x01\x01"),
-                          parse_bool) == [True]
-        assert parse_list(io.BytesIO(b"\x00\x00\x00\x03\x01\x00\x01"), parse_bool) == [
-            True, False, True]
+        assert parse_list(io.BytesIO(b"\x00\x00\x00\x01\x01"), parse_bool) == [True]
+        assert parse_list(io.BytesIO(b"\x00\x00\x00\x03\x01\x00\x01"), parse_bool) == [True, False, True]
 
         # EOF
         with raises(AssertionError):
@@ -289,10 +282,8 @@ class TestStreamable(unittest.TestCase):
     def test_parse_tuple(self):
 
         assert parse_tuple(io.BytesIO(b""), []) == ()
-        assert parse_tuple(io.BytesIO(b"\x00\x00"), [
-                           parse_bool, parse_bool]) == (False, False)
-        assert parse_tuple(io.BytesIO(b"\x00\x01"), [
-                           parse_bool, parse_bool]) == (False, True)
+        assert parse_tuple(io.BytesIO(b"\x00\x00"), [parse_bool, parse_bool]) == (False, False)
+        assert parse_tuple(io.BytesIO(b"\x00\x01"), [parse_bool, parse_bool]) == (False, True)
 
         # error in parsing internal type
         with raises(ValueError):
@@ -312,8 +303,7 @@ class TestStreamable(unittest.TestCase):
                 ret.b = b
                 return ret
 
-        assert parse_size_hints(io.BytesIO(
-            b"1337"), TestFromBytes, 4).b == b"1337"
+        assert parse_size_hints(io.BytesIO(b"1337"), TestFromBytes, 4).b == b"1337"
 
         # EOF
         with raises(AssertionError):
@@ -334,12 +324,10 @@ class TestStreamable(unittest.TestCase):
         assert parse_str(io.BytesIO(b"\x00\x00\x00\x01a")) == "a"
 
         # 512 bytes
-        assert parse_str(io.BytesIO(
-            b"\x00\x00\x02\x00" + b"a" * 512)) == "a" * 512
+        assert parse_str(io.BytesIO(b"\x00\x00\x02\x00" + b"a" * 512)) == "a" * 512
 
         # 255 bytes
-        assert parse_str(io.BytesIO(
-            b"\x00\x00\x00\xff" + b"b" * 255)) == "b" * 255
+        assert parse_str(io.BytesIO(b"\x00\x00\x00\xff" + b"b" * 255)) == "b" * 255
 
         # EOF
         with raises(AssertionError):

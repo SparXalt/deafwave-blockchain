@@ -21,8 +21,7 @@ from deafwave.util.keychain import Keychain
 from deafwave.util.path import mkdir
 from deafwave.wallet.derive_keys import master_sk_to_pool_sk, master_sk_to_wallet_sk
 
-private_node_names = {"full_node", "wallet",
-                      "farmer", "harvester", "timelord", "daemon"}
+private_node_names = {"full_node", "wallet", "farmer", "harvester", "timelord", "daemon"}
 public_node_names = {"full_node", "wallet", "farmer", "introducer", "timelord"}
 
 
@@ -42,8 +41,7 @@ def dict_add_new_default(updated: Dict, default: Dict, do_not_migrate_keys: Dict
             # If there is an intermediate key with empty string value, do not migrate all descendants
             if do_not_migrate_keys.get(k, None) == "":
                 do_not_migrate_keys[k] = v
-            dict_add_new_default(
-                updated[k], default[k], do_not_migrate_keys.get(k, {}))
+            dict_add_new_default(updated[k], default[k], do_not_migrate_keys.get(k, {}))
         elif k not in updated or ignore is True:
             updated[k] = v
 
@@ -56,8 +54,7 @@ def check_keys(new_root: Path) -> None:
         return None
 
     config: Dict = load_config(new_root, "config.yaml")
-    pool_child_pubkeys = [master_sk_to_pool_sk(
-        sk).get_g1() for sk, _ in all_sks]
+    pool_child_pubkeys = [master_sk_to_pool_sk(sk).get_g1() for sk, _ in all_sks]
     all_targets = []
     stop_searching_for_farmer = "zzz_target_address" not in config["farmer"]
     stop_searching_for_pool = "zzz_target_address" not in config["pool"]
@@ -69,8 +66,7 @@ def check_keys(new_root: Path) -> None:
             break
         for sk, _ in all_sks:
             all_targets.append(
-                encode_puzzle_hash(create_puzzlehash_for_pk(
-                    master_sk_to_wallet_sk(sk, uint32(i)).get_g1()), prefix)
+                encode_puzzle_hash(create_puzzlehash_for_pk(master_sk_to_wallet_sk(sk, uint32(i)).get_g1()), prefix)
             )
             if all_targets[-1] == config["farmer"].get("zzz_target_address"):
                 stop_searching_for_farmer = True
@@ -149,8 +145,7 @@ def migrate_from(
     config: Dict = load_config(new_root, "config.yaml")
     config_str: str = initial_config_file("config.yaml")
     default_config: Dict = yaml.safe_load(config_str)
-    flattened_keys = unflatten_properties(
-        {k: "" for k in do_not_migrate_settings})
+    flattened_keys = unflatten_properties({k: "" for k in do_not_migrate_settings})
     dict_add_new_default(config, default_config, flattened_keys)
 
     save_config(new_root, "config.yaml", config)
@@ -203,8 +198,7 @@ def create_all_ssl(root: Path):
         generate_ssl_for_nodes(ssl_dir, ca_crt, ca_key, True)
 
     deafwave_ca_crt, deafwave_ca_key = get_deafwave_ca_crt_key()
-    generate_ssl_for_nodes(ssl_dir, deafwave_ca_crt,
-                           deafwave_ca_key, False, overwrite=False)
+    generate_ssl_for_nodes(ssl_dir, deafwave_ca_crt, deafwave_ca_key, False, overwrite=False)
 
 
 def generate_ssl_for_nodes(ssl_dir: Path, ca_crt: bytes, ca_key: bytes, private: bool, overwrite=True):
@@ -281,16 +275,14 @@ def deafwave_version_number() -> Tuple[str, str, str, str]:
     # If this is a beta dev release - get which beta it is
     if "0b" in scm_minor_version:
         original_minor_ver_list = scm_minor_version.split("0b")
-        # decrement the major release for beta
-        major_release_number = str(1 - int(scm_major_version))
+        major_release_number = str(1 - int(scm_major_version))  # decrement the major release for beta
         minor_release_number = scm_major_version
         patch_release_number = original_minor_ver_list[1]
         if smc_patch_version and "dev" in smc_patch_version:
             dev_release_number = "." + smc_patch_version
     elif "0rc" in version[1]:
         original_minor_ver_list = scm_minor_version.split("0rc")
-        # decrement the major release for release candidate
-        major_release_number = str(1 - int(scm_major_version))
+        major_release_number = str(1 - int(scm_major_version))  # decrement the major release for release candidate
         minor_release_number = str(int(scm_major_version) + 1)  # RC is 0.2.1 for RC 1
         patch_release_number = original_minor_ver_list[1]
         if smc_patch_version and "dev" in smc_patch_version:

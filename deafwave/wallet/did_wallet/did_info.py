@@ -15,10 +15,8 @@ class DIDInfo(Streamable):
     origin_coin: Optional[Coin]  # puzzlehash of this coin is our DID
     backup_ids: List[bytes]
     num_of_backup_ids_needed: uint64
-    # {coin.name(): CCParent}
-    parent_info: List[Tuple[bytes32, Optional[CCParent]]]
+    parent_info: List[Tuple[bytes32, Optional[CCParent]]]  # {coin.name(): CCParent}
     current_inner: Optional[Program]  # represents a Program as bytes
-    # partially recovered wallet uses these to hold info
-    temp_coin: Optional[Coin]
+    temp_coin: Optional[Coin]  # partially recovered wallet uses these to hold info
     temp_puzhash: Optional[bytes32]
     temp_pubkey: Optional[bytes]

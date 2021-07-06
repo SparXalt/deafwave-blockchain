@@ -93,8 +93,7 @@ def next_sub_epoch_summary(
         object: the new sub-epoch summary
     """
     signage_point_index = block.reward_chain_block.signage_point_index
-    prev_b: Optional[BlockRecord] = blocks.try_block_record(
-        block.prev_header_hash)
+    prev_b: Optional[BlockRecord] = blocks.try_block_record(block.prev_header_hash)
     if prev_b is None or prev_b.height == 0:
         return None
 
@@ -117,8 +116,7 @@ def next_sub_epoch_summary(
         return None
 
     if can_finish_soon:
-        # Assume that our deficit will go to zero soon
-        deficit: uint8 = uint8(0)
+        deficit: uint8 = uint8(0)  # Assume that our deficit will go to zero soon
         can_finish_se = True
         if height_can_be_first_in_epoch(constants, uint32(prev_b.height + 2)):
             can_finish_epoch = True
@@ -167,10 +165,8 @@ def next_sub_epoch_summary(
 
     # if can finish epoch, new difficulty and ssi
     if can_finish_epoch:
-        sp_iters = calculate_sp_iters(
-            constants, sub_slot_iters, signage_point_index)
-        ip_iters = calculate_ip_iters(
-            constants, sub_slot_iters, signage_point_index, required_iters)
+        sp_iters = calculate_sp_iters(constants, sub_slot_iters, signage_point_index)
+        ip_iters = calculate_ip_iters(constants, sub_slot_iters, signage_point_index, required_iters)
 
         next_difficulty = _get_next_difficulty(
             constants,
@@ -181,8 +177,7 @@ def next_sub_epoch_summary(
             deficit,
             False,  # Already checked above
             True,
-            uint128(block.total_iters - ip_iters + sp_iters - \
-                    (sub_slot_iters if overflow else 0)),
+            uint128(block.total_iters - ip_iters + sp_iters - (sub_slot_iters if overflow else 0)),
             True,
         )
         next_sub_slot_iters = _get_next_sub_slot_iters(
@@ -194,8 +189,7 @@ def next_sub_epoch_summary(
             deficit,
             False,  # Already checked above
             True,
-            uint128(block.total_iters - ip_iters + sp_iters - \
-                    (sub_slot_iters if overflow else 0)),
+            uint128(block.total_iters - ip_iters + sp_iters - (sub_slot_iters if overflow else 0)),
             True,
         )
 

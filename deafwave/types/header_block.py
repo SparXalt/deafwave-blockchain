@@ -20,11 +20,9 @@ class HeaderBlock(Streamable):
     reward_chain_ip_proof: VDFProof
     infused_challenge_chain_ip_proof: Optional[VDFProof]  # Iff deficit < 4
     foliage: Foliage  # Reward chain foliage data
-    # Reward chain foliage data (tx block)
-    foliage_transaction_block: Optional[FoliageTransactionBlock]
+    foliage_transaction_block: Optional[FoliageTransactionBlock]  # Reward chain foliage data (tx block)
     transactions_filter: bytes  # Filter for block transactions
-    # Reward chain foliage data (tx block additional)
-    transactions_info: Optional[TransactionsInfo]
+    transactions_info: Optional[TransactionsInfo]  # Reward chain foliage data (tx block additional)
 
     @property
     def prev_header_hash(self):

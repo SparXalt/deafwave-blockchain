@@ -19,12 +19,9 @@ class UnfinishedBlock(Streamable):
     challenge_chain_sp_proof: Optional[VDFProof]  # If not first sp in sub-slot
     reward_chain_sp_proof: Optional[VDFProof]  # If not first sp in sub-slot
     foliage: Foliage  # Reward chain foliage data
-    # Reward chain foliage data (tx block)
-    foliage_transaction_block: Optional[FoliageTransactionBlock]
-    # Reward chain foliage data (tx block additional)
-    transactions_info: Optional[TransactionsInfo]
-    # Program that generates transactions
-    transactions_generator: Optional[SerializedProgram]
+    foliage_transaction_block: Optional[FoliageTransactionBlock]  # Reward chain foliage data (tx block)
+    transactions_info: Optional[TransactionsInfo]  # Reward chain foliage data (tx block additional)
+    transactions_generator: Optional[SerializedProgram]  # Program that generates transactions
     transactions_generator_ref_list: List[
         uint32
     ]  # List of block heights of previous generators referenced in this block

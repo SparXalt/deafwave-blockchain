@@ -77,12 +77,10 @@ def show_all_keys(show_mnemonic: bool):
         print("Fingerprint:", sk.get_g1().get_fingerprint())
         print("Master public key (m):", sk.get_g1())
         print("Farmer public key (m/12381/8444/0/0):", master_sk_to_farmer_sk(sk).get_g1())
-        print("Pool public key (m/12381/8444/1/0):",
-              master_sk_to_pool_sk(sk).get_g1())
+        print("Pool public key (m/12381/8444/1/0):", master_sk_to_pool_sk(sk).get_g1())
         print(
             "First wallet address:",
-            encode_puzzle_hash(create_puzzlehash_for_pk(
-                master_sk_to_wallet_sk(sk, uint32(0)).get_g1()), prefix),
+            encode_puzzle_hash(create_puzzlehash_for_pk(master_sk_to_wallet_sk(sk, uint32(0)).get_g1()), prefix),
         )
         assert seed is not None
         if show_mnemonic:
@@ -105,8 +103,7 @@ def sign(message: str, fingerprint: int, hd_path: str):
     k = Keychain()
     private_keys = k.get_all_private_keys()
 
-    path: List[uint32] = [uint32(int(i))
-                          for i in hd_path.split("/") if i != "m"]
+    path: List[uint32] = [uint32(int(i)) for i in hd_path.split("/") if i != "m"]
     for sk, _ in private_keys:
         if sk.get_g1().get_fingerprint() == fingerprint:
             for c in path:

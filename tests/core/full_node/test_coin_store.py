@@ -6,8 +6,11 @@ from typing import List, Optional, Set, Tuple
 import aiosqlite
 import pytest
 
-from deafwave.consensus.block_rewards import calculate_base_farmer_reward, \
-    calculate_pool_reward, calculate_postfarm_reward
+from deafwave.consensus.block_rewards import (
+    calculate_base_farmer_reward,
+    calculate_pool_reward,
+    calculate_postfarm_reward,
+)
 from deafwave.consensus.blockchain import Blockchain, ReceiveBlockResult
 from deafwave.consensus.coinbase import create_farmer_coin, create_pool_coin, create_postfarm_coin
 from deafwave.full_node.block_store import BlockStore
@@ -45,10 +48,7 @@ def get_future_reward_coins(block: FullBlock) -> Tuple[Coin, Coin]:
         assert block.transactions_info is not None
         farmer_amount = uint64(farmer_amount + block.transactions_info.fees)
     pool_coin: Coin = create_pool_coin(
-        block.height,
-        block.foliage.foliage_block_data.pool_target.puzzle_hash,
-        pool_amount,
-        constants.GENESIS_CHALLENGE
+        block.height, block.foliage.foliage_block_data.pool_target.puzzle_hash, pool_amount, constants.GENESIS_CHALLENGE
     )
     farmer_coin: Coin = create_farmer_coin(
         block.height,
@@ -57,10 +57,7 @@ def get_future_reward_coins(block: FullBlock) -> Tuple[Coin, Coin]:
         constants.GENESIS_CHALLENGE,
     )
     postfarm_coin: Coin = create_postfarm_coin(
-        block.height,
-        constants.GENESIS_POST_FARM_PUZZLE_HASH,
-        postfarm_amount,
-        constants.GENESIS_CHALLENGE
+        block.height, constants.GENESIS_POST_FARM_PUZZLE_HASH, postfarm_amount, constants.GENESIS_CHALLENGE
     )
     return pool_coin, farmer_coin, postfarm_coin
 
@@ -87,8 +84,7 @@ class TestCoinStore:
                         if coin.puzzle_hash == reward_ph:
                             coins_to_spend.append(coin)
 
-            spend_bundle = wallet_a.generate_signed_transaction(
-                1000, wallet_a.get_new_puzzlehash(), coins_to_spend[0])
+            spend_bundle = wallet_a.generate_signed_transaction(1000, wallet_a.get_new_puzzlehash(), coins_to_spend[0])
 
             db_path = Path("fndb_test.db")
             if db_path.exists():

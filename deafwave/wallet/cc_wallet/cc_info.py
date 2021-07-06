@@ -10,5 +10,4 @@ from deafwave.util.streamable import Streamable, streamable
 @streamable
 class CCInfo(Streamable):
     my_genesis_checker: Optional[Program]  # this is the program
-    # {coin.name(): lineage_proof}
-    lineage_proofs: List[Tuple[bytes32, Optional[Program]]]
+    lineage_proofs: List[Tuple[bytes32, Optional[Program]]]  # {coin.name(): lineage_proof}

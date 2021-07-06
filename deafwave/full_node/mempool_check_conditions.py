@@ -335,8 +335,7 @@ def get_name_puzzle_conditions(
             if conditions_dict is None:
                 conditions_dict = {}
             npc_list.append(
-                NPC(spent_coin.name(), spent_coin.puzzle_hash, [
-                    (a, b) for a, b in conditions_dict.items()])
+                NPC(spent_coin.name(), spent_coin.puzzle_hash, [(a, b) for a, b in conditions_dict.items()])
             )
         return NPCResult(None, npc_list, uint64(clvm_cost))
     except ValidationError as e:
@@ -351,8 +350,7 @@ def get_puzzle_and_solution_for_coin(generator: BlockGenerator, coin_name: bytes
         if not generator.generator_args:
             block_program_args = NIL
         else:
-            block_program_args = create_generator_args(
-                generator.generator_refs())
+            block_program_args = create_generator_args(generator.generator_refs())
 
         cost, result = GENERATOR_FOR_SINGLE_COIN_MOD.run_with_cost(
             max_cost, block_program, block_program_args, coin_name
@@ -382,22 +380,17 @@ def mempool_check_conditions_dict(
             if cvp.opcode is ConditionOpcode.ASSERT_MY_COIN_ID:
                 error = mempool_assert_my_coin_id(cvp, unspent)
             elif cvp.opcode is ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT:
-                error = mempool_assert_announcement(
-                    cvp, coin_announcement_names)
+                error = mempool_assert_announcement(cvp, coin_announcement_names)
             elif cvp.opcode is ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT:
-                error = mempool_assert_announcement(
-                    cvp, puzzle_announcement_names)
+                error = mempool_assert_announcement(cvp, puzzle_announcement_names)
             elif cvp.opcode is ConditionOpcode.ASSERT_HEIGHT_ABSOLUTE:
-                error = mempool_assert_absolute_block_height_exceeds(
-                    cvp, prev_transaction_block_height)
+                error = mempool_assert_absolute_block_height_exceeds(cvp, prev_transaction_block_height)
             elif cvp.opcode is ConditionOpcode.ASSERT_HEIGHT_RELATIVE:
-                error = mempool_assert_relative_block_height_exceeds(
-                    cvp, unspent, prev_transaction_block_height)
+                error = mempool_assert_relative_block_height_exceeds(cvp, unspent, prev_transaction_block_height)
             elif cvp.opcode is ConditionOpcode.ASSERT_SECONDS_ABSOLUTE:
                 error = mempool_assert_absolute_time_exceeds(cvp, timestamp)
             elif cvp.opcode is ConditionOpcode.ASSERT_SECONDS_RELATIVE:
-                error = mempool_assert_relative_time_exceeds(
-                    cvp, unspent, timestamp)
+                error = mempool_assert_relative_time_exceeds(cvp, unspent, timestamp)
             elif cvp.opcode is ConditionOpcode.ASSERT_MY_PARENT_ID:
                 error = mempool_assert_my_parent_id(cvp, unspent)
             elif cvp.opcode is ConditionOpcode.ASSERT_MY_PUZZLEHASH:

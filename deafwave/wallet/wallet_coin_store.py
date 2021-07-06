@@ -137,15 +137,13 @@ class WalletCoinStore:
         return spent
 
     def coin_record_from_row(self, row: sqlite3.Row) -> WalletCoinRecord:
-        coin = Coin(bytes32(bytes.fromhex(row[6])), bytes32(
-            bytes.fromhex(row[5])), uint64.from_bytes(row[7]))
+        coin = Coin(bytes32(bytes.fromhex(row[6])), bytes32(bytes.fromhex(row[5])), uint64.from_bytes(row[7]))
         return WalletCoinRecord(
-            coin, uint32(row[1]), uint32(row[2]), bool(
-                row[3]), bool(row[4]), WalletType(row[8]), row[9]
+            coin, uint32(row[1]), uint32(row[2]), bool(row[3]), bool(row[4]), WalletType(row[8]), row[9]
         )
 
     async def get_coin_record(self, coin_name: bytes32) -> Optional[WalletCoinRecord]:
-        """ Returns CoinRecord with specified coin id. """
+        """Returns CoinRecord with specified coin id."""
         if coin_name in self.coin_record_cache:
             return self.coin_record_cache[coin_name]
         cursor = await self.db_connection.execute("SELECT * from coin_record WHERE coin_name=?", (coin_name.hex(),))
@@ -157,7 +155,7 @@ class WalletCoinStore:
         return self.coin_record_from_row(row)
 
     async def get_first_coin_height(self) -> Optional[uint32]:
-        """ Returns height of first confirmed coin"""
+        """Returns height of first confirmed coin"""
         cursor = await self.db_connection.execute("SELECT MIN(confirmed_height) FROM coin_record;")
         row = await cursor.fetchone()
         await cursor.close()
@@ -190,16 +188,15 @@ class WalletCoinStore:
             return all_unspent
 
     async def get_unspent_coins_for_wallet(self, wallet_id: int) -> Set[WalletCoinRecord]:
-        """ Returns set of CoinRecords that have not been spent yet for a wallet. """
+        """Returns set of CoinRecords that have not been spent yet for a wallet."""
         if wallet_id in self.unspent_coin_wallet_cache:
-            wallet_coins: Dict[bytes32,
-                               WalletCoinRecord] = self.unspent_coin_wallet_cache[wallet_id]
+            wallet_coins: Dict[bytes32, WalletCoinRecord] = self.unspent_coin_wallet_cache[wallet_id]
             return set(wallet_coins.values())
         else:
             return set()
 
     async def get_all_coins(self) -> Set[WalletCoinRecord]:
-        """ Returns set of all CoinRecords."""
+        """Returns set of all CoinRecords."""
         cursor = await self.db_connection.execute("SELECT * from coin_record")
         rows = await cursor.fetchall()
         await cursor.close()
@@ -235,8 +232,7 @@ class WalletCoinStore:
                     coin_record.wallet_id,
                 )
                 self.coin_record_cache[coin_record.coin.name()] = new_record
-                self.unspent_coin_wallet_cache[coin_record.wallet_id][coin_record.coin.name(
-                )] = new_record
+                self.unspent_coin_wallet_cache[coin_record.wallet_id][coin_record.coin.name()] = new_record
             if coin_record.confirmed_block_height > height:
                 delete_queue.append(coin_record)
 

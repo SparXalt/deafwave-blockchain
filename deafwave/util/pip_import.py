@@ -13,6 +13,5 @@ def pip_import(module, pypi_name=None):
     except ImportError:
         pass
 
-    subprocess.call([sys.executable, "-m", "pip",
-                     "install", pypi_name or module])
+    subprocess.call([sys.executable, "-m", "pip", "install", pypi_name or module])
     return __import__(module)

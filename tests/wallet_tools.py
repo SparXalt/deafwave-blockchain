@@ -55,8 +55,7 @@ class WalletTool:
             return private
         else:
             for child in range(self.next_address):
-                pubkey = master_sk_to_wallet_sk(
-                    self.private_key, uint32(child)).get_g1()
+                pubkey = master_sk_to_wallet_sk(self.private_key, uint32(child)).get_g1()
                 if puzzle_hash == puzzle_for_pk(bytes(pubkey)).get_tree_hash():
                     return master_sk_to_wallet_sk(self.private_key, uint32(child))
         raise ValueError(f"Do not have the keys for puzzle hash {puzzle_hash}")
@@ -66,8 +65,7 @@ class WalletTool:
 
     def get_new_puzzle(self) -> bytes32:
         next_address_index: uint32 = self.get_next_address_index()
-        pubkey = master_sk_to_wallet_sk(
-            self.private_key, next_address_index).get_g1()
+        pubkey = master_sk_to_wallet_sk(self.private_key, next_address_index).get_g1()
         self.pubkey_num_lookup[bytes(pubkey)] = next_address_index
 
         puzzle = puzzle_for_pk(bytes(pubkey))
@@ -80,8 +78,7 @@ class WalletTool:
         return puzzle.get_tree_hash()
 
     def sign(self, value: bytes, pubkey: bytes) -> G2Element:
-        privatekey: PrivateKey = master_sk_to_wallet_sk(
-            self.private_key, self.pubkey_num_lookup[pubkey])
+        privatekey: PrivateKey = master_sk_to_wallet_sk(self.private_key, self.pubkey_num_lookup[pubkey])
         return AugSchemeMPL.sign(privatekey, value)
 
     def make_solution(self, condition_dic: Dict[ConditionOpcode, List[ConditionWithArgs]]) -> Program:
@@ -110,20 +107,16 @@ class WalletTool:
         if ConditionOpcode.CREATE_COIN_ANNOUNCEMENT not in condition_dic:
             condition_dic[ConditionOpcode.CREATE_COIN_ANNOUNCEMENT] = []
 
-        output = ConditionWithArgs(ConditionOpcode.CREATE_COIN, [
-                                   new_puzzle_hash, int_to_bytes(amount)])
+        output = ConditionWithArgs(ConditionOpcode.CREATE_COIN, [new_puzzle_hash, int_to_bytes(amount)])
         condition_dic[output.opcode].append(output)
-        amount_total = sum(int_from_bytes(
-            cvp.vars[1]) for cvp in condition_dic[ConditionOpcode.CREATE_COIN])
+        amount_total = sum(int_from_bytes(cvp.vars[1]) for cvp in condition_dic[ConditionOpcode.CREATE_COIN])
         change = spend_value - amount_total - fee
         if change > 0:
             change_puzzle_hash = self.get_new_puzzlehash()
-            change_output = ConditionWithArgs(ConditionOpcode.CREATE_COIN, [
-                                              change_puzzle_hash, int_to_bytes(change)])
+            change_output = ConditionWithArgs(ConditionOpcode.CREATE_COIN, [change_puzzle_hash, int_to_bytes(change)])
             condition_dic[output.opcode].append(change_output)
 
-        secondary_coins_cond_dic: Dict[ConditionOpcode,
-                                       List[ConditionWithArgs]] = dict()
+        secondary_coins_cond_dic: Dict[ConditionOpcode, List[ConditionWithArgs]] = dict()
         secondary_coins_cond_dic[ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT] = []
         for n, coin in enumerate(coins):
             puzzle_hash = coin.puzzle_hash
@@ -134,24 +127,19 @@ class WalletTool:
             if n == 0:
                 message_list = [c.name() for c in coins]
                 for outputs in condition_dic[ConditionOpcode.CREATE_COIN]:
-                    message_list.append(
-                        Coin(coin.name(), outputs.vars[0], int_from_bytes(outputs.vars[1])).name())
+                    message_list.append(Coin(coin.name(), outputs.vars[0], int_from_bytes(outputs.vars[1])).name())
                 message = std_hash(b"".join(message_list))
                 condition_dic[ConditionOpcode.CREATE_COIN_ANNOUNCEMENT].append(
-                    ConditionWithArgs(
-                        ConditionOpcode.CREATE_COIN_ANNOUNCEMENT, [message])
+                    ConditionWithArgs(ConditionOpcode.CREATE_COIN_ANNOUNCEMENT, [message])
                 )
-                primary_announcement_hash = Announcement(
-                    coin.name(), message).name()
+                primary_announcement_hash = Announcement(coin.name(), message).name()
                 secondary_coins_cond_dic[ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT].append(
-                    ConditionWithArgs(ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT, [
-                                      primary_announcement_hash])
+                    ConditionWithArgs(ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT, [primary_announcement_hash])
                 )
                 main_solution = self.make_solution(condition_dic)
                 spends.append(CoinSolution(coin, puzzle, main_solution))
             else:
-                spends.append(CoinSolution(
-                    coin, puzzle, self.make_solution(secondary_coins_cond_dic)))
+                spends.append(CoinSolution(coin, puzzle, self.make_solution(secondary_coins_cond_dic)))
         return spends
 
     def sign_transaction(self, coin_solutions: List[CoinSolution]) -> SpendBundle:

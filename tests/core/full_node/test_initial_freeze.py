@@ -54,17 +54,14 @@ class TestTransactions:
         await asyncio.sleep(2)
         print(await wallet.get_confirmed_balance(), funds)
         await time_out_assert(10, wallet.get_confirmed_balance, funds)
-        assert int(
-            time.time()) < full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP
+        assert int(time.time()) < full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP
         tx: TransactionRecord = await wallet.generate_signed_transaction(100, ph, 0)
         spend = wallet_protocol.SendTransaction(tx.spend_bundle)
         response = await full_node_api.send_transaction(spend)
-        assert wallet_protocol.TransactionAck.from_bytes(
-            response.data).status == MempoolInclusionStatus.FAILED
+        assert wallet_protocol.TransactionAck.from_bytes(response.data).status == MempoolInclusionStatus.FAILED
 
         peer = full_node_server.all_connections[node_id]
-        new_spend = full_node_protocol.NewTransaction(
-            tx.spend_bundle.name(), 1, 0)
+        new_spend = full_node_protocol.NewTransaction(tx.spend_bundle.name(), 1, 0)
         await full_node_api.new_transaction(new_spend, peer=peer)
 
         async def new_transaction_not_requested(incoming):
@@ -91,8 +88,7 @@ class TestTransactions:
             if int(time.time()) > full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP:
                 break
 
-        new_spend = full_node_protocol.NewTransaction(
-            tx.spend_bundle.name(), 1, 0)
+        new_spend = full_node_protocol.NewTransaction(tx.spend_bundle.name(), 1, 0)
         await full_node_api.new_transaction(new_spend, peer)
 
         async def new_spend_requested(incoming, new_spend):
@@ -103,8 +99,7 @@ class TestTransactions:
                     and isinstance(response, Message)
                     and response.type == ProtocolMessageTypes.request_transaction.value
                 ):
-                    request = full_node_protocol.RequestTransaction.from_bytes(
-                        response.data)
+                    request = full_node_protocol.RequestTransaction.from_bytes(response.data)
                     if request.transaction_id == new_spend.transaction_id:
                         return True
             return False
@@ -116,10 +111,8 @@ class TestTransactions:
         response = await full_node_api.send_transaction(spend)
         assert response is not None
 
-        assert wallet_protocol.TransactionAck.from_bytes(
-            response.data).status == MempoolInclusionStatus.SUCCESS
-        assert ProtocolMessageTypes(
-            response.type) == ProtocolMessageTypes.transaction_ack
+        assert wallet_protocol.TransactionAck.from_bytes(response.data).status == MempoolInclusionStatus.SUCCESS
+        assert ProtocolMessageTypes(response.type) == ProtocolMessageTypes.transaction_ack
 
     @pytest.mark.asyncio
     async def test_invalid_block(self, wallet_node_30_freeze):
@@ -155,14 +148,12 @@ class TestTransactions:
             1, block_list_input=current_blocks, guarantee_transaction_block=True
         )
         last_block_no_tx = new_blocks_no_tx[-1:][0]
-        assert int(
-            time.time()) < full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP
+        assert int(time.time()) < full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP
         result, error, fork = await full_node_api.full_node.blockchain.receive_block(last_block, None)
         assert error is not None
         assert error is Err.INITIAL_TRANSACTION_FREEZE
         assert result is ReceiveBlockResult.INVALID_BLOCK
-        assert int(
-            time.time()) < full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP
+        assert int(time.time()) < full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP
 
         while True:
             if int(time.time()) > full_node_api.full_node.constants.INITIAL_FREEZE_END_TIMESTAMP:
@@ -173,8 +164,7 @@ class TestTransactions:
         assert error is None
         assert result is ReceiveBlockResult.NEW_PEAK
 
-        after_freeze_blocks = bt.get_consecutive_blocks(
-            24, block_list_input=new_blocks_no_tx)
+        after_freeze_blocks = bt.get_consecutive_blocks(24, block_list_input=new_blocks_no_tx)
         for block in after_freeze_blocks:
             await full_node_api.full_node.blockchain.receive_block(block, None)
 

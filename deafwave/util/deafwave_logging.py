@@ -10,8 +10,7 @@ from deafwave.util.path import mkdir, path_from_root
 
 
 def initialize_logging(service_name: str, logging_config: Dict, root_path: Path):
-    log_path = path_from_root(root_path, logging_config.get(
-        "log_filename", "log/debug.log"))
+    log_path = path_from_root(root_path, logging_config.get("log_filename", "log/debug.log"))
     log_date_format = "%Y-%m-%dT%H:%M:%S"
 
     mkdir(str(log_path.parent))
@@ -32,8 +31,7 @@ def initialize_logging(service_name: str, logging_config: Dict, root_path: Path)
     else:
         logger = logging.getLogger()
         maxrotation = logging_config.get("log_maxfilesrotation", 7)
-        handler = ConcurrentRotatingFileHandler(
-            log_path, "a", maxBytes=20 * 1024 * 1024, backupCount=maxrotation)
+        handler = ConcurrentRotatingFileHandler(log_path, "a", maxBytes=20 * 1024 * 1024, backupCount=maxrotation)
         handler.setFormatter(
             logging.Formatter(
                 fmt=f"%(asctime)s.%(msecs)03d {service_name} %(name)-{file_name_length}s: %(levelname)-8s %(message)s",
@@ -61,10 +59,8 @@ def initialize_logging(service_name: str, logging_config: Dict, root_path: Path)
             logger.setLevel(logging.INFO)
         elif logging_config["log_level"] == "DEBUG":
             logger.setLevel(logging.DEBUG)
-            logging.getLogger("aiosqlite").setLevel(
-                logging.INFO)  # Too much logging on debug level
-            logging.getLogger("websockets").setLevel(
-                logging.INFO)  # Too much logging on debug level
+            logging.getLogger("aiosqlite").setLevel(logging.INFO)  # Too much logging on debug level
+            logging.getLogger("websockets").setLevel(logging.INFO)  # Too much logging on debug level
         else:
             logger.setLevel(logging.INFO)
     else:

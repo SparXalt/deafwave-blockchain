@@ -8,7 +8,11 @@ from blspy import G1Element, G2Element
 from chiabip158 import PyBIP158
 
 from deafwave.consensus.block_record import BlockRecord
-from deafwave.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward, calculate_postfarm_reward
+from deafwave.consensus.block_rewards import (
+    calculate_base_farmer_reward,
+    calculate_pool_reward,
+    calculate_postfarm_reward,
+)
 from deafwave.consensus.blockchain_interface import BlockchainInterface
 from deafwave.consensus.coinbase import create_farmer_coin, create_pool_coin, create_postfarm_coin
 from deafwave.consensus.constants import ConsensusConstants
@@ -16,7 +20,12 @@ from deafwave.consensus.cost_calculator import NPCResult, calculate_cost_of_prog
 from deafwave.full_node.mempool_check_conditions import get_name_puzzle_conditions
 from deafwave.full_node.signage_point import SignagePoint
 from deafwave.types.blockchain_format.coin import Coin, hash_coin_list
-from deafwave.types.blockchain_format.foliage import Foliage, FoliageBlockData, FoliageTransactionBlock, TransactionsInfo
+from deafwave.types.blockchain_format.foliage import (
+    Foliage,
+    FoliageBlockData,
+    FoliageTransactionBlock,
+    TransactionsInfo,
+)
 from deafwave.types.blockchain_format.pool_target import PoolTarget
 from deafwave.types.blockchain_format.proof_of_space import ProofOfSpace
 from deafwave.types.blockchain_format.reward_chain_block import RewardChainBlock, RewardChainBlockUnfinished
@@ -151,8 +160,7 @@ def create_foliage(
 
             assert curr.fees is not None
             pool_coin = create_pool_coin(
-                curr.height, curr.pool_puzzle_hash, calculate_pool_reward(
-                    curr.height), constants.GENESIS_CHALLENGE
+                curr.height, curr.pool_puzzle_hash, calculate_pool_reward(curr.height), constants.GENESIS_CHALLENGE
             )
 
             farmer_coin = create_farmer_coin(
@@ -235,8 +243,7 @@ def create_foliage(
 
         generator_refs_hash = bytes32([1] * 32)
         if generator_block_heights_list not in (None, []):
-            generator_ref_list_bytes = b"".join(
-                [bytes(i) for i in generator_block_heights_list])
+            generator_ref_list_bytes = b"".join([bytes(i) for i in generator_block_heights_list])
             generator_refs_hash = std_hash(generator_ref_list_bytes)
 
         filter_hash: bytes32 = std_hash(encoded)
@@ -265,8 +272,7 @@ def create_foliage(
         )
         assert foliage_transaction_block is not None
 
-        foliage_transaction_block_hash: Optional[bytes32] = foliage_transaction_block.get_hash(
-        )
+        foliage_transaction_block_hash: Optional[bytes32] = foliage_transaction_block.get_hash()
         foliage_transaction_block_signature: Optional[G2Element] = get_plot_signature(
             foliage_transaction_block_hash, reward_block_unfinished.proof_of_space.plot_public_key
         )
@@ -276,8 +282,7 @@ def create_foliage(
         foliage_transaction_block_signature = None
         foliage_transaction_block = None
         transactions_info = None
-    assert (foliage_transaction_block_hash is None) == (
-        foliage_transaction_block_signature is None)
+    assert (foliage_transaction_block_hash is None) == (foliage_transaction_block_signature is None)
 
     foliage = Foliage(
         prev_block_hash,
@@ -379,17 +384,13 @@ def create_unfinished_block(
                 rc_sp_hash = curr.finished_reward_slot_hashes[-1]
         signage_point = SignagePoint(None, None, None, None)
 
-    cc_sp_signature: Optional[G2Element] = get_plot_signature(
-        cc_sp_hash, proof_of_space.plot_public_key)
-    rc_sp_signature: Optional[G2Element] = get_plot_signature(
-        rc_sp_hash, proof_of_space.plot_public_key)
+    cc_sp_signature: Optional[G2Element] = get_plot_signature(cc_sp_hash, proof_of_space.plot_public_key)
+    rc_sp_signature: Optional[G2Element] = get_plot_signature(rc_sp_hash, proof_of_space.plot_public_key)
     assert cc_sp_signature is not None
     assert rc_sp_signature is not None
-    assert blspy.AugSchemeMPL.verify(
-        proof_of_space.plot_public_key, cc_sp_hash, cc_sp_signature)
+    assert blspy.AugSchemeMPL.verify(proof_of_space.plot_public_key, cc_sp_hash, cc_sp_signature)
 
-    total_iters = uint128(sub_slot_start_total_iters +
-                          ip_iters + (sub_slot_iters if overflow else 0))
+    total_iters = uint128(sub_slot_start_total_iters + ip_iters + (sub_slot_iters if overflow else 0))
 
     rc_block = RewardChainBlockUnfinished(
         total_iters,
@@ -479,8 +480,7 @@ def unfinished_block_to_full_block(
         new_generator = unfinished_block.transactions_generator
         new_generator_ref_list = unfinished_block.transactions_generator_ref_list
     else:
-        is_transaction_block, _ = get_prev_transaction_block(
-            prev_block, blocks, total_iters_sp)
+        is_transaction_block, _ = get_prev_transaction_block(prev_block, blocks, total_iters_sp)
         new_weight = uint128(prev_block.weight + difficulty)
         new_height = uint32(prev_block.height + 1)
         if is_transaction_block:

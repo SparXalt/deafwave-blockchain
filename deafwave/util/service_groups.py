@@ -1,14 +1,14 @@
 from typing import KeysView, Generator
 
 SERVICES_FOR_GROUP = {
-    "all":  (
-                "deafwave_harvester"
-                "deafwave_timelord_launcher"
-                "deafwave_timelord"
-                "deafwave_farmer"
-                "deafwave_full_node"
-                "deafwave_wallet"
-            ).split(), ## TODO: Validate
+    "all": (
+        "deafwave_harvester"
+        "deafwave_timelord_launcher"
+        "deafwave_timelord"
+        "deafwave_farmer"
+        "deafwave_full_node"
+        "deafwave_wallet"
+    ).split(),  # TODO: Validate
     "node": "deafwave_full_node".split(),
     "harvester": "deafwave_harvester".split(),
     "farmer": "deafwave_harvester deafwave_farmer deafwave_full_node deafwave_wallet".split(),

@@ -6,8 +6,7 @@ from setuptools_scm import get_version
 
 # example: 1.0b5.dev225
 def main():
-    # Special case windows to 0.1.6225
-    windows = len(sys.argv) > 1 and "win" in sys.argv[1]
+    windows = len(sys.argv) > 1 and "win" in sys.argv[1]  # Special case windows to 0.1.6225
 
     scm_full_version = get_version(root="..", relative_to=__file__)
     # scm_full_version = "1.0.5.dev22"
@@ -35,16 +34,14 @@ def main():
     # If this is a beta dev release, get which beta it is
     if "0b" in scm_minor_version:
         orignial_minor_ver_list = scm_minor_version.split("0b")
-        # decrement the major release for beta
-        major_release_number = str(1 - int(scm_major_version))
+        major_release_number = str(1 - int(scm_major_version))  # decrement the major release for beta
         minor_release_number = scm_major_version
         patch_release_number = orignial_minor_ver_list[1]
         if smc_patch_version and "dev" in smc_patch_version:
             dev_release_number = "." + smc_patch_version
     elif "0rc" in version[1]:
         original_minor_ver_list = scm_minor_version.split("0rc")
-        # decrement the major release for release candidate
-        major_release_number = str(1 - int(scm_major_version))
+        major_release_number = str(1 - int(scm_major_version))  # decrement the major release for release candidate
         minor_release_number = str(int(scm_major_version) + 1)  # RC is 0.2.1 for RC 1
         patch_release_number = original_minor_ver_list[1]
         if smc_patch_version and "dev" in smc_patch_version:
@@ -64,8 +61,7 @@ def main():
         install_release_number += "." + patch_release_number
     if len(dev_release_number) > 0:
         if windows:
-            dev_release_number_digits = "".join(
-                [i for i in dev_release_number if i.isdigit()])
+            dev_release_number_digits = "".join([i for i in dev_release_number if i.isdigit()])
             dev_release_number = dev_release_number_digits
         install_release_number += dev_release_number
 

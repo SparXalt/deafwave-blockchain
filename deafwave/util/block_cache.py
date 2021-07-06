@@ -82,8 +82,7 @@ class BlockCache(BlockchainInterface):
     async def persist_sub_epoch_challenge_segments(
         self, sub_epoch_summary_height: uint32, segments: List[SubEpochChallengeSegment]
     ):
-        self._sub_epoch_segments[sub_epoch_summary_height] = SubEpochSegments(
-            segments)
+        self._sub_epoch_segments[sub_epoch_summary_height] = SubEpochSegments(segments)
 
     async def get_sub_epoch_challenge_segments(
         self,

@@ -249,8 +249,7 @@ class MiddleNode(Node):
                 raise SetError
             if children[0].is_terminal() and children[1].is_terminal() and children[0].hash >= children[1].hash:
                 raise SetError
-            self.hash = hashdown(
-                children[0].get_hash() + children[1].get_hash())
+            self.hash = hashdown(children[0].get_hash() + children[1].get_hash())
 
     def get_hash(self) -> bytes:
         return MIDDLE + self.hash
@@ -297,12 +296,10 @@ class MiddleNode(Node):
         p.append(MIDDLE)
         if get_bit(tocheck, depth) == 0:
             r = self.children[0].is_included(tocheck, depth + 1, p)
-            self.children[1].other_included(
-                tocheck, depth + 1, p, not self.children[0].is_empty())
+            self.children[1].other_included(tocheck, depth + 1, p, not self.children[0].is_empty())
             return r
         else:
-            self.children[0].other_included(
-                tocheck, depth + 1, p, not self.children[1].is_empty())
+            self.children[0].other_included(tocheck, depth + 1, p, not self.children[1].is_empty())
             return self.children[1].is_included(tocheck, depth + 1, p)
 
     def other_included(self, tocheck: bytes, depth: int, p: List[bytes], collapse: bool):
@@ -390,15 +387,13 @@ def deserialize_proof(proof: bytes32) -> MerkleSet:
 
 
 def _deserialize(proof: bytes32, pos: int, bits: List[int]) -> Tuple[Node, int]:
-    t = proof[pos: pos + 1]  # flake8: noqa
+    t = proof[pos : pos + 1]  # flake8: noqa
     if t == EMPTY:
         return _empty, pos + 1
     if t == TERMINAL:
-        # flake8: noqa
-        return TerminalNode(proof[pos + 1: pos + 33], bits), pos + 33
+        return TerminalNode(proof[pos + 1 : pos + 33], bits), pos + 33  # flake8: noqa
     if t == TRUNCATED:
-        # flake8: noqa
-        return TruncatedNode(proof[pos + 1: pos + 33]), pos + 33
+        return TruncatedNode(proof[pos + 1 : pos + 33]), pos + 33  # flake8: noqa
     if t != MIDDLE:
         raise SetError()
     v0, pos = _deserialize(proof, pos + 1, bits + [0])

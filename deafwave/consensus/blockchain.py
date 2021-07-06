@@ -108,8 +108,7 @@ class Blockchain(BlockchainInterface):
         self.constants = consensus_constants
         self.coin_store = coin_store
         self.block_store = block_store
-        self.constants_json = recurse_jsonify(
-            dataclasses.asdict(self.constants))
+        self.constants_json = recurse_jsonify(dataclasses.asdict(self.constants))
         self._shut_down = False
         await self._load_chain_from_store()
         self._seen_compact_proofs = set()
@@ -210,8 +209,7 @@ class Blockchain(BlockchainInterface):
                         cost_per_byte=self.constants.COST_PER_BYTE,
                         safe_mode=False,
                     )
-                    removals, tx_additions = tx_removals_and_additions(
-                        npc_result.npc_list)
+                    removals, tx_additions = tx_removals_and_additions(npc_result.npc_list)
                 else:
                     removals, tx_additions = [], []
                 header_block = get_block_header(block, tx_additions, removals)
@@ -308,8 +306,7 @@ class Blockchain(BlockchainInterface):
                 assert block is not None
 
                 if npc_result is not None:
-                    tx_removals, tx_additions = tx_removals_and_additions(
-                        npc_result.npc_list)
+                    tx_removals, tx_additions = tx_removals_and_additions(npc_result.npc_list)
                 else:
                     tx_removals, tx_additions = [], []
                 await self.coin_store.new_block(block, tx_additions, tx_removals)
@@ -326,8 +323,7 @@ class Blockchain(BlockchainInterface):
             elif fork_point_with_peak is not None:
                 fork_height = fork_point_with_peak
             else:
-                fork_height = find_fork_point_in_chain(
-                    self, block_record, peak)
+                fork_height = find_fork_point_in_chain(self, block_record, peak)
 
             if block_record.prev_hash != peak.header_hash:
                 await self.coin_store.rollback_to_block(fork_height)
@@ -349,8 +345,7 @@ class Blockchain(BlockchainInterface):
                 fetched_block_record: Optional[BlockRecord] = await self.block_store.get_block_record(curr)
                 assert fetched_full_block is not None
                 assert fetched_block_record is not None
-                blocks_to_add.append(
-                    (fetched_full_block, fetched_block_record))
+                blocks_to_add.append((fetched_full_block, fetched_block_record))
                 if fetched_full_block.height == 0:
                     # Doing a full reorg, starting at height 0
                     break
@@ -472,19 +467,16 @@ class Blockchain(BlockchainInterface):
         curr: Optional[BlockRecord] = peak
         while curr is not None and len(recent_rc) < 2 * self.constants.MAX_SUB_SLOT_BLOCKS:
             if curr != peak:
-                recent_rc.append(
-                    (curr.reward_infusion_new_challenge, curr.total_iters))
+                recent_rc.append((curr.reward_infusion_new_challenge, curr.total_iters))
             if curr.first_in_sub_slot:
                 assert curr.finished_reward_slot_hashes is not None
-                sub_slot_total_iters = curr.ip_sub_slot_total_iters(
-                    self.constants)
+                sub_slot_total_iters = curr.ip_sub_slot_total_iters(self.constants)
                 # Start from the most recent
                 for rc in reversed(curr.finished_reward_slot_hashes):
                     if sub_slot_total_iters < curr.sub_slot_iters:
                         break
                     recent_rc.append((rc, sub_slot_total_iters))
-                    sub_slot_total_iters = uint128(
-                        sub_slot_total_iters - curr.sub_slot_iters)
+                    sub_slot_total_iters = uint128(sub_slot_total_iters - curr.sub_slot_iters)
             curr = self.try_block_record(curr.prev_hash)
         return list(reversed(recent_rc))
 
@@ -506,11 +498,9 @@ class Blockchain(BlockchainInterface):
             block.foliage_transaction_block,
             b"",
         )
-        prev_b = self.try_block_record(
-            unfinished_header_block.prev_header_hash)
+        prev_b = self.try_block_record(unfinished_header_block.prev_header_hash)
         sub_slot_iters, difficulty = get_next_sub_slot_iters_and_difficulty(
-            self.constants, len(
-                unfinished_header_block.finished_sub_slots) > 0, prev_b, self
+            self.constants, len(unfinished_header_block.finished_sub_slots) > 0, prev_b, self
         )
         required_iters, error = validate_unfinished_header_block(
             self.constants,
@@ -642,14 +632,12 @@ class Blockchain(BlockchainInterface):
         while blocks_to_remove is not None and height >= 0:
             for header_hash in blocks_to_remove:
                 del self.__block_records[header_hash]  # remove from blocks
-            # remove height from heights in cache
-            del self.__heights_in_cache[uint32(height)]
+            del self.__heights_in_cache[uint32(height)]  # remove height from heights in cache
 
             if height == 0:
                 break
             height = height - 1
-            blocks_to_remove = self.__heights_in_cache.get(
-                uint32(height), None)
+            blocks_to_remove = self.__heights_in_cache.get(uint32(height), None)
 
     def clean_block_records(self):
         """
@@ -691,8 +679,7 @@ class Blockchain(BlockchainInterface):
 
         for block in blocks:
             if self.height_to_hash(block.height) != block.header_hash:
-                raise ValueError(
-                    f"Block at {block.header_hash} is no longer in the blockchain (it's in a fork)")
+                raise ValueError(f"Block at {block.header_hash} is no longer in the blockchain (it's in a fork)")
             if tx_filter is False:
                 header = get_block_header(block, [], [])
             else:
@@ -701,8 +688,7 @@ class Blockchain(BlockchainInterface):
                 ]
                 removed: List[CoinRecord] = await self.coin_store.get_coins_removed_at_height(block.height)
                 header = get_block_header(
-                    block, [record.coin for record in tx_additions], [
-                        record.coin.name() for record in removed]
+                    block, [record.coin for record in tx_additions], [record.coin.name() for record in removed]
                 )
             header_blocks[header.header_hash] = header
 
@@ -755,8 +741,7 @@ class Blockchain(BlockchainInterface):
         self.__block_records[block_record.header_hash] = block_record
         if block_record.height not in self.__heights_in_cache.keys():
             self.__heights_in_cache[block_record.height] = set()
-        self.__heights_in_cache[block_record.height].add(
-            block_record.header_hash)
+        self.__heights_in_cache[block_record.height].add(block_record.header_hash)
 
     async def persist_sub_epoch_challenge_segments(
         self, ses_block_hash: bytes32, segments: List[SubEpochChallengeSegment]
@@ -810,8 +795,7 @@ class Blockchain(BlockchainInterface):
                 assert ref_block is not None
                 if ref_block.transactions_generator is None:
                     raise ValueError(Err.GENERATOR_REF_HAS_NO_GENERATOR)
-                result.append(GeneratorArg(ref_block.height,
-                                           ref_block.transactions_generator))
+                result.append(GeneratorArg(ref_block.height, ref_block.transactions_generator))
         else:
             # First tries to find the blocks in additional_blocks
             reorg_chain: Dict[uint32, FullBlock] = {}
@@ -848,8 +832,7 @@ class Blockchain(BlockchainInterface):
                     assert ref_block is not None
                     if ref_block.transactions_generator is None:
                         raise ValueError(Err.GENERATOR_REF_HAS_NO_GENERATOR)
-                    result.append(GeneratorArg(ref_block.height,
-                                               ref_block.transactions_generator))
+                    result.append(GeneratorArg(ref_block.height, ref_block.transactions_generator))
                 else:
                     if ref_height in additional_height_dict:
                         ref_block = additional_height_dict[ref_height]
@@ -859,7 +842,6 @@ class Blockchain(BlockchainInterface):
                     assert ref_block is not None
                     if ref_block.transactions_generator is None:
                         raise ValueError(Err.GENERATOR_REF_HAS_NO_GENERATOR)
-                    result.append(GeneratorArg(ref_block.height,
-                                               ref_block.transactions_generator))
+                    result.append(GeneratorArg(ref_block.height, ref_block.transactions_generator))
         assert len(result) == len(ref_list)
         return BlockGenerator(block.transactions_generator, result)

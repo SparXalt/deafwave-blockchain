@@ -60,5 +60,4 @@ total_deafwave += make_puzzle(pool_amounts)
 print("\nFarmer address: ")
 total_deafwave += make_puzzle(farmer_amounts)
 
-assert total_deafwave == calculate_base_farmer_reward(
-    uint32(0)) + calculate_pool_reward(uint32(0))
+assert total_deafwave == calculate_base_farmer_reward(uint32(0)) + calculate_pool_reward(uint32(0))

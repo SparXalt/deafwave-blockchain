@@ -52,8 +52,7 @@ def generate_test_spend_bundle(
 ) -> SpendBundle:
     if condition_dic is None:
         condition_dic = {}
-    transaction = WALLET_A.generate_signed_transaction(
-        amount, new_puzzle_hash, coin, condition_dic, fee)
+    transaction = WALLET_A.generate_signed_transaction(amount, new_puzzle_hash, coin, condition_dic, fee)
     assert transaction is not None
     return transaction
 
@@ -102,8 +101,7 @@ class TestMempool:
         with pytest.raises(ValueError):
             mempool.get_min_fee_rate(max_mempool_cost + 1)
 
-        spend_bundle = generate_test_spend_bundle(
-            list(blocks[-1].get_included_reward_coins())[0])
+        spend_bundle = generate_test_spend_bundle(list(blocks[-1].get_included_reward_coins())[0])
         assert spend_bundle is not None
 
 
@@ -148,11 +146,9 @@ class TestMempoolManager:
 
         await time_out_assert(60, node_height_at_least, True, full_node_2, blocks[-1].height)
 
-        spend_bundle = generate_test_spend_bundle(
-            list(blocks[-1].get_included_reward_coins())[0])
+        spend_bundle = generate_test_spend_bundle(list(blocks[-1].get_included_reward_coins())[0])
         assert spend_bundle is not None
-        tx: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(
-            spend_bundle)
+        tx: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(spend_bundle)
         res = await full_node_1.respond_transaction(tx, peer)
         log.info(f"Res {res}")
 
@@ -182,8 +178,7 @@ class TestMempoolManager:
             await full_node_1.full_node.respond_block(full_node_protocol.RespondBlock(block))
         await time_out_assert(60, node_height_at_least, True, full_node_1, start_height + 3)
 
-        spend_bundle1 = generate_test_spend_bundle(
-            list(blocks[-1].get_included_reward_coins())[0])
+        spend_bundle1 = generate_test_spend_bundle(list(blocks[-1].get_included_reward_coins())[0])
 
         assert spend_bundle1 is not None
         tx1: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(spend_bundle1)
@@ -199,10 +194,8 @@ class TestMempoolManager:
         tx2: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(spend_bundle2)
         status, err = await respond_transaction(full_node_1, tx2, peer)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
-        sb2 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle2.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
+        sb2 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle2.name())
 
         assert sb1 == spend_bundle1
         assert sb2 is None
@@ -224,8 +217,7 @@ class TestMempoolManager:
         assert sb == node.full_node.mempool_manager.get_spendbundle(sb.name())
 
     def assert_sb_not_in_pool(self, node, sb):
-        assert node.full_node.mempool_manager.get_spendbundle(
-            sb.name()) is None
+        assert node.full_node.mempool_manager.get_spendbundle(sb.name()) is None
 
     @pytest.mark.asyncio
     async def test_double_spend_with_higher_fee(self, two_nodes):
@@ -276,8 +268,7 @@ class TestMempoolManager:
         self.assert_sb_in_pool(full_node_1, sb12)
         self.assert_sb_not_in_pool(full_node_1, sb1_3)
 
-        sb3 = generate_test_spend_bundle(
-            coin3, fee=uint64(min_fee_increase * 2))
+        sb3 = generate_test_spend_bundle(coin3, fee=uint64(min_fee_increase * 2))
         sb23 = SpendBundle.aggregate((sb2, sb3))
         await self.send_sb(full_node_1, peer, sb23)
 
@@ -296,8 +287,7 @@ class TestMempoolManager:
         # sb1234_1 should not be in pool as it decreases total fees per cost
         self.assert_sb_not_in_pool(full_node_1, sb1234_1)
 
-        sb4_2 = generate_test_spend_bundle(
-            coin4, fee=uint64(min_fee_increase * 2))
+        sb4_2 = generate_test_spend_bundle(coin4, fee=uint64(min_fee_increase * 2))
         sb1234_2 = SpendBundle.aggregate((sb12, sb3, sb4_2))
         await self.send_sb(full_node_1, peer, sb1234_2)
         # sb1234_2 has a higher fee per cost than its conflicts and should get
@@ -514,8 +504,7 @@ class TestMempoolManager:
         full_node_1, full_node_2, server_1, server_2 = two_nodes
         blocks = await full_node_1.get_all_full_blocks()
         coin = list(blocks[-1].get_included_reward_coins())[0]
-        cvp = ConditionWithArgs(
-            ConditionOpcode.ASSERT_MY_COIN_ID, [coin.name()])
+        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_COIN_ID, [coin.name()])
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, coin=coin)
 
@@ -547,8 +536,7 @@ class TestMempoolManager:
         blocks = await full_node_1.get_all_full_blocks()
         coin = list(blocks[-1].get_included_reward_coins())[0]
         coin_2 = list(blocks[-2].get_included_reward_coins())[0]
-        cvp = ConditionWithArgs(
-            ConditionOpcode.ASSERT_MY_COIN_ID, [coin_2.name()])
+        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_COIN_ID, [coin_2.name()])
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, coin=coin)
 
@@ -652,8 +640,7 @@ class TestMempoolManager:
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
         assert sb1 is None
         assert status == MempoolInclusionStatus.FAILED
         assert err == Err.ASSERT_SECONDS_RELATIVE_FAILED
@@ -860,8 +847,7 @@ class TestMempoolManager:
 
         blocks, bundle, status, err = await self.condition_tester2(two_nodes, test_fun)
 
-        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(
-            bundle.name())
+        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(bundle.name())
 
         assert mempool_bundle is None
         assert status == MempoolInclusionStatus.FAILED
@@ -916,8 +902,7 @@ class TestMempoolManager:
 
         blocks, bundle, status, err = await self.condition_tester2(two_nodes, test_fun)
 
-        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(
-            bundle.name())
+        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(bundle.name())
 
         assert mempool_bundle is bundle
         assert status == MempoolInclusionStatus.SUCCESS
@@ -1025,8 +1010,7 @@ class TestMempoolManager:
 
         blocks, bundle, status, err = await self.condition_tester2(two_nodes, test_fun)
 
-        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(
-            bundle.name())
+        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(bundle.name())
 
         assert mempool_bundle is None
         assert status == MempoolInclusionStatus.FAILED
@@ -1055,8 +1039,7 @@ class TestMempoolManager:
 
         blocks, bundle, status, err = await self.condition_tester2(two_nodes, test_fun)
 
-        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(
-            bundle.name())
+        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(bundle.name())
 
         assert mempool_bundle is None
         assert status == MempoolInclusionStatus.FAILED
@@ -1131,8 +1114,7 @@ class TestMempoolManager:
 
         full_node_1, full_node_2, server_1, server_2 = two_nodes
 
-        cvp = ConditionWithArgs(
-            ConditionOpcode.RESERVE_FEE, [int_to_bytes(10)])
+        cvp = ConditionWithArgs(ConditionOpcode.RESERVE_FEE, [int_to_bytes(10)])
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, fee=9)
         mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
@@ -1165,8 +1147,7 @@ class TestMempoolManager:
 
         receiver_puzzlehash = BURN_PUZZLE_HASH
 
-        cvp = ConditionWithArgs(
-            ConditionOpcode.RESERVE_FEE, [int_to_bytes(10)])
+        cvp = ConditionWithArgs(ConditionOpcode.RESERVE_FEE, [int_to_bytes(10)])
         dic = {cvp.opcode: [cvp]}
 
         fee = 9
@@ -1185,18 +1166,15 @@ class TestMempoolManager:
         assert spend_bundle1 is not None
         assert steal_fee_spendbundle is not None
 
-        combined = SpendBundle.aggregate(
-            [spend_bundle1, steal_fee_spendbundle])
+        combined = SpendBundle.aggregate([spend_bundle1, steal_fee_spendbundle])
 
         assert combined.fees() == 4
 
-        tx1: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(
-            spend_bundle1)
+        tx1: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(spend_bundle1)
 
         status, err = await respond_transaction(full_node_1, tx1, peer)
 
-        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        mempool_bundle = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
 
         assert mempool_bundle is None
         assert status == MempoolInclusionStatus.FAILED
@@ -1233,16 +1211,13 @@ class TestMempoolManager:
 
         assert spend_bundle2 is not None
 
-        spend_bundle_combined = SpendBundle.aggregate(
-            [spend_bundle1, spend_bundle2])
+        spend_bundle_combined = SpendBundle.aggregate([spend_bundle1, spend_bundle2])
 
-        tx: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(
-            spend_bundle_combined)
+        tx: full_node_protocol.RespondTransaction = full_node_protocol.RespondTransaction(spend_bundle_combined)
 
         status, err = await respond_transaction(full_node_1, tx, peer)
 
-        sb = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle_combined.name())
+        sb = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle_combined.name())
         assert sb is None
         assert status == MempoolInclusionStatus.FAILED
         assert err == Err.DOUBLE_SPEND
@@ -1276,8 +1251,7 @@ class TestMempoolManager:
         assert len(unsigned) == 1
         coin_solution: CoinSolution = unsigned[0]
 
-        err, con, cost = conditions_for_solution(
-            coin_solution.puzzle_reveal, coin_solution.solution, INFINITE_COST)
+        err, con, cost = conditions_for_solution(coin_solution.puzzle_reveal, coin_solution.solution, INFINITE_COST)
         assert con is not None
 
         # TODO(straya): fix this test
@@ -1304,13 +1278,11 @@ class TestMempoolManager:
         full_node_1, full_node_2, server_1, server_2 = two_nodes
         blocks = await full_node_1.get_all_full_blocks()
         coin = list(blocks[-1].get_included_reward_coins())[0]
-        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_PARENT_ID, [
-                                coin.parent_coin_info])
+        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_PARENT_ID, [coin.parent_coin_info])
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, coin=coin)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
 
         assert sb1 is spend_bundle1
         assert status == MempoolInclusionStatus.SUCCESS
@@ -1355,13 +1327,11 @@ class TestMempoolManager:
         blocks = await full_node_1.get_all_full_blocks()
         coin = list(blocks[-1].get_included_reward_coins())[0]
         coin_2 = list(blocks[-2].get_included_reward_coins())[0]
-        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_PARENT_ID, [
-                                coin_2.parent_coin_info])
+        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_PARENT_ID, [coin_2.parent_coin_info])
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, coin=coin)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
 
         assert sb1 is None
         assert status == MempoolInclusionStatus.FAILED
@@ -1373,13 +1343,11 @@ class TestMempoolManager:
         full_node_1, full_node_2, server_1, server_2 = two_nodes
         blocks = await full_node_1.get_all_full_blocks()
         coin = list(blocks[-1].get_included_reward_coins())[0]
-        cvp = ConditionWithArgs(
-            ConditionOpcode.ASSERT_MY_PUZZLEHASH, [coin.puzzle_hash])
+        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_PUZZLEHASH, [coin.puzzle_hash])
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, coin=coin)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
 
         assert sb1 is spend_bundle1
         assert status == MempoolInclusionStatus.SUCCESS
@@ -1423,13 +1391,11 @@ class TestMempoolManager:
         full_node_1, full_node_2, server_1, server_2 = two_nodes
         blocks = await full_node_1.get_all_full_blocks()
         coin = list(blocks[-1].get_included_reward_coins())[0]
-        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_PUZZLEHASH, [
-                                Program.to([]).get_tree_hash()])
+        cvp = ConditionWithArgs(ConditionOpcode.ASSERT_MY_PUZZLEHASH, [Program.to([]).get_tree_hash()])
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, coin=coin)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
 
         assert sb1 is None
         assert status == MempoolInclusionStatus.FAILED
@@ -1445,8 +1411,7 @@ class TestMempoolManager:
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic, coin=coin)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
 
         assert sb1 is spend_bundle1
         assert status == MempoolInclusionStatus.SUCCESS
@@ -1523,8 +1488,7 @@ class TestMempoolManager:
         dic = {cvp.opcode: [cvp]}
         blocks, spend_bundle1, peer, status, err = await self.condition_tester(two_nodes, dic)
 
-        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(
-            spend_bundle1.name())
+        sb1 = full_node_1.full_node.mempool_manager.get_spendbundle(spend_bundle1.name())
 
         assert sb1 is None
         assert status == MempoolInclusionStatus.FAILED

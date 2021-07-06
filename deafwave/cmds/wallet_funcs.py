@@ -29,8 +29,7 @@ def print_transaction(tx: TransactionRecord, verbose: bool, name) -> None:
         print(f"Status: {'Confirmed' if tx.confirmed else ('In mempool' if tx.is_in_mempool() else 'Pending')}")
         print(f"Amount: {deafwave_amount} {name}")
         print(f"To address: {to_address}")
-        print("Created at:", datetime.fromtimestamp(
-            tx.created_at_time).strftime("%Y-%m-%d %H:%M:%S"))
+        print("Created at:", datetime.fromtimestamp(tx.created_at_time).strftime("%Y-%m-%d %H:%M:%S"))
         print("")
 
 
@@ -38,8 +37,7 @@ async def get_transaction(args: dict, wallet_client: WalletRpcClient, fingerprin
     wallet_id = args["id"]
     transaction_id = hexstr_to_bytes(args["tx_id"])
     config = load_config(DEFAULT_ROOT_PATH, "config.yaml", SERVICE_NAME)
-    name = config["network_overrides"]["config"][config["selected_network"]
-                                                 ]["address_prefix"]
+    name = config["network_overrides"]["config"][config["selected_network"]]["address_prefix"]
     tx: TransactionRecord = await wallet_client.get_transaction(wallet_id, transaction_id=transaction_id)
     print_transaction(tx, verbose=(args["verbose"] > 0), name=name)
 
@@ -48,8 +46,7 @@ async def get_transactions(args: dict, wallet_client: WalletRpcClient, fingerpri
     wallet_id = args["id"]
     txs: List[TransactionRecord] = await wallet_client.get_transactions(wallet_id)
     config = load_config(DEFAULT_ROOT_PATH, "config.yaml", SERVICE_NAME)
-    name = config["network_overrides"]["config"][config["selected_network"]
-                                                 ]["address_prefix"]
+    name = config["network_overrides"]["config"][config["selected_network"]]["address_prefix"]
     if len(txs) == 0:
         print("There are no transactions to this address")
 
@@ -59,8 +56,7 @@ async def get_transactions(args: dict, wallet_client: WalletRpcClient, fingerpri
         for j in range(0, num_per_screen):
             if i + j >= len(txs):
                 break
-            print_transaction(
-                txs[i + j], verbose=(args["verbose"] > 0), name=name)
+            print_transaction(txs[i + j], verbose=(args["verbose"] > 0), name=name)
         if i + num_per_screen >= len(txs):
             return None
         print("Press q to quit, or c to continue")
@@ -133,11 +129,13 @@ async def print_balances(args: dict, wallet_client: WalletRpcClient, fingerprint
         else:
             print(f"Wallet ID {wallet_id} type {typ}")
             print(
-                f"   -Total Balance: {balances['confirmed_wallet_balance']/units['deafwave']} {address_prefix} "
+                f"   -Total Balance: {balances['confirmed_wallet_balance']/units['deafwave']} "
+                f"{address_prefix} "
                 f"({balances['confirmed_wallet_balance']} mojo)"
             )
             print(
-                f"   -Pending Total Balance: {balances['unconfirmed_wallet_balance']/units['deafwave']} {address_prefix} "
+                f"   -Pending Total Balance: {balances['unconfirmed_wallet_balance']/units['deafwave']} "
+                f"{address_prefix} "
                 f"({balances['unconfirmed_wallet_balance']} mojo)"
             )
             print(
@@ -186,8 +184,7 @@ async def get_wallet(wallet_client: WalletRpcClient, fingerprint: int = None) ->
             if "backup_path" in log_in_response:
                 path = log_in_response["backup_path"]
                 print(f"Backup file from backup.deafwave.net downloaded and written to: {path}")
-                val = input(
-                    "Do you want to use this file to restore from backup? (Y/N) ")
+                val = input("Do you want to use this file to restore from backup? (Y/N) ")
                 if val.lower() == "y":
                     log_in_response = await wallet_client.log_in_and_restore(fingerprint, path)
                 else:
@@ -208,8 +205,7 @@ async def get_wallet(wallet_client: WalletRpcClient, fingerprint: int = None) ->
                 if val.lower() == "s":
                     log_in_response = await wallet_client.log_in_and_skip(fingerprint)
                 elif val.lower() == "f":
-                    val = input(
-                        "Please provide the full path to your backup file: ")
+                    val = input("Please provide the full path to your backup file: ")
                     log_in_response = await wallet_client.log_in_and_restore(fingerprint, val)
 
     if "success" not in log_in_response or log_in_response["success"] is False:

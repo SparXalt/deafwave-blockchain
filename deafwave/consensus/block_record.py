@@ -26,18 +26,14 @@ class BlockRecord(Streamable):
     weight: uint128  # Total cumulative difficulty of all ancestor blocks since genesis
     total_iters: uint128  # Total number of VDF iterations since genesis, including this block
     signage_point_index: uint8
-    # This is the intermediary VDF output at ip_iters in challenge chain
-    challenge_vdf_output: ClassgroupElement
+    challenge_vdf_output: ClassgroupElement  # This is the intermediary VDF output at ip_iters in challenge chain
     infused_challenge_vdf_output: Optional[
         ClassgroupElement
     ]  # This is the intermediary VDF output at ip_iters in infused cc, iff deficit <= 3
-    # The reward chain infusion output, input to next VDF
-    reward_infusion_new_challenge: bytes32
-    # Hash of challenge chain data, used to validate end of slots in the future
-    challenge_block_info_hash: bytes32
+    reward_infusion_new_challenge: bytes32  # The reward chain infusion output, input to next VDF
+    challenge_block_info_hash: bytes32  # Hash of challenge chain data, used to validate end of slots in the future
     sub_slot_iters: uint64  # Current network sub_slot_iters parameter
-    # Need to keep track of these because Coins are created in a future block
-    pool_puzzle_hash: bytes32
+    pool_puzzle_hash: bytes32  # Need to keep track of these because Coins are created in a future block
     farmer_puzzle_hash: bytes32
     required_iters: uint64  # The number of iters required for this proof of space
     deficit: uint8  # A deficit of 16 is an overflow block after an infusion. Deficit of 15 is a challenge block
@@ -46,8 +42,7 @@ class BlockRecord(Streamable):
 
     # Transaction block (present iff is_transaction_block)
     timestamp: Optional[uint64]
-    # Header hash of the previous transaction block
-    prev_transaction_block_hash: Optional[bytes32]
+    prev_transaction_block_hash: Optional[bytes32]  # Header hash of the previous transaction block
     fees: Optional[uint64]
     reward_claims_incorporated: Optional[List[Coin]]
 

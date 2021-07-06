@@ -23,8 +23,7 @@ def get_transaction_cmd(wallet_rpc_port: int, fingerprint: int, id: int, tx_id: 
     import asyncio
     from .wallet_funcs import execute_with_wallet, get_transaction
 
-    asyncio.run(execute_with_wallet(wallet_rpc_port,
-                                    fingerprint, extra_params, get_transaction))
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, get_transaction))
 
 
 @wallet_cmd.command("get_transactions", short_help="Get all transactions")
@@ -52,8 +51,7 @@ def get_transactions_cmd(wallet_rpc_port: int, fingerprint: int, id: int, offset
     import asyncio
     from .wallet_funcs import execute_with_wallet, get_transactions
 
-    asyncio.run(execute_with_wallet(wallet_rpc_port,
-                                    fingerprint, extra_params, get_transactions))
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, get_transactions))
 
 
 @wallet_cmd.command("send", short_help="Send deafwave to another wallet")
@@ -87,8 +85,7 @@ def send_cmd(
     import asyncio
     from .wallet_funcs import execute_with_wallet, send
 
-    asyncio.run(execute_with_wallet(
-        wallet_rpc_port, fingerprint, extra_params, send))
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, send))
 
 
 @wallet_cmd.command("show", short_help="Show wallet information")
@@ -104,8 +101,7 @@ def show_cmd(wallet_rpc_port: int, fingerprint: int) -> None:
     import asyncio
     from .wallet_funcs import execute_with_wallet, print_balances
 
-    asyncio.run(execute_with_wallet(
-        wallet_rpc_port, fingerprint, {}, print_balances))
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, {}, print_balances))
 
 
 @wallet_cmd.command("get_address", short_help="Get a wallet receive address")
@@ -123,5 +119,4 @@ def get_address_cmd(wallet_rpc_port: int, id, fingerprint: int) -> None:
     import asyncio
     from .wallet_funcs import execute_with_wallet, get_address
 
-    asyncio.run(execute_with_wallet(wallet_rpc_port,
-                                    fingerprint, extra_params, get_address))
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, get_address))

@@ -69,8 +69,10 @@ class TestDIDWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
-             for i in range(1, num_blocks - 1)]
+            [
+                calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+                for i in range(1, num_blocks - 1)
+            ]
         )
 
         await time_out_assert(10, wallet_0.get_unconfirmed_balance, funds)
@@ -90,8 +92,7 @@ class TestDIDWallet:
         # Wallet1 sets up DIDWallet_1 with DIDWallet_0 as backup
         backup_ids = [bytes.fromhex(did_wallet_0.get_my_DID())]
         did_wallet_1: DIDWallet = await DIDWallet.create_new_did_wallet(
-            wallet_node_0.wallet_state_manager, wallet_0, uint64(
-                201), backup_ids
+            wallet_node_0.wallet_state_manager, wallet_0, uint64(201), backup_ids
         )
 
         for i in range(1, num_blocks):
@@ -197,8 +198,7 @@ class TestDIDWallet:
         recovery_list = [bytes.fromhex(did_wallet.get_my_DID())]
 
         did_wallet_2: DIDWallet = await DIDWallet.create_new_did_wallet(
-            wallet_node_2.wallet_state_manager, wallet2, uint64(
-                101), recovery_list
+            wallet_node_2.wallet_state_manager, wallet2, uint64(101), recovery_list
         )
 
         for i in range(1, num_blocks):
@@ -212,8 +212,7 @@ class TestDIDWallet:
         recovery_list.append(bytes.fromhex(did_wallet_2.get_my_DID()))
 
         did_wallet_3: DIDWallet = await DIDWallet.create_new_did_wallet(
-            wallet_node_2.wallet_state_manager, wallet2, uint64(
-                201), recovery_list
+            wallet_node_2.wallet_state_manager, wallet2, uint64(201), recovery_list
         )
 
         ph2 = await wallet.get_new_puzzlehash()
@@ -230,8 +229,7 @@ class TestDIDWallet:
         ).pubkey
         message_spend_bundle = await did_wallet.create_attestment(coin.name(), ph, pubkey, "test1.attest")
         message_spend_bundle2 = await did_wallet_2.create_attestment(coin.name(), ph, pubkey, "test2.attest")
-        message_spend_bundle = message_spend_bundle.aggregate(
-            [message_spend_bundle, message_spend_bundle2])
+        message_spend_bundle = message_spend_bundle.aggregate([message_spend_bundle, message_spend_bundle2])
 
         (
             test_info_list,
@@ -337,8 +335,7 @@ class TestDIDWallet:
         recovery_list = [bytes.fromhex(did_wallet.get_my_DID())]
 
         did_wallet_2: DIDWallet = await DIDWallet.create_new_did_wallet(
-            wallet_node_2.wallet_state_manager, wallet2, uint64(
-                101), recovery_list
+            wallet_node_2.wallet_state_manager, wallet2, uint64(101), recovery_list
         )
         ph = await wallet.get_new_puzzlehash()
         for i in range(1, num_blocks):
@@ -476,14 +473,12 @@ class TestDIDWallet:
         coins = await did_wallet.select_coins(1)
         coin = coins.pop()
         # innerpuz is our desired output
-        innersol = Program.to(
-            [[51, coin.puzzle_hash, 45], [51, coin.puzzle_hash, 56]])
+        innersol = Program.to([[51, coin.puzzle_hash, 45], [51, coin.puzzle_hash, 56]])
         # full solution is (corehash parent_info my_amount innerpuz_reveal solution)
         parent_info = await did_wallet.get_parent_for_coin(coin)
         fullsol = Program.to(
             [
-                [did_wallet.did_info.origin_coin.parent_coin_info,
-                    did_wallet.did_info.origin_coin.amount],
+                [did_wallet.did_info.origin_coin.parent_coin_info, did_wallet.did_info.origin_coin.amount],
                 [
                     parent_info.parent_name,
                     parent_info.inner_puzzle_hash,
@@ -494,8 +489,7 @@ class TestDIDWallet:
             ]
         )
         try:
-            cost, result = puz.run_with_cost(
-                DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM, fullsol)
+            cost, result = puz.run_with_cost(DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM, fullsol)
         except Exception as e:
             assert e.args == ("path into atom",)
         else:
@@ -566,8 +560,7 @@ class TestDIDWallet:
 
         # Write spend by hand
         # innerpuz solution is (mode amount new_puz identity my_puz)
-        innersol = Program.to(
-            [0, coin.amount, ph, coin.name(), coin.puzzle_hash])
+        innersol = Program.to([0, coin.amount, ph, coin.name(), coin.puzzle_hash])
         # full solution is (corehash parent_info my_amount innerpuz_reveal solution)
         innerpuz = did_wallet.did_info.current_inner
         full_puzzle: Program = did_wallet_puzzles.create_fullpuz(
@@ -576,8 +569,7 @@ class TestDIDWallet:
         )
         fullsol = Program.to(
             [
-                [did_wallet.did_info.origin_coin.parent_coin_info,
-                    did_wallet.did_info.origin_coin.amount],
+                [did_wallet.did_info.origin_coin.parent_coin_info, did_wallet.did_info.origin_coin.amount],
                 [
                     parent_info.parent_name,
                     parent_info.inner_puzzle_hash,
@@ -590,12 +582,10 @@ class TestDIDWallet:
 
         list_of_solutions = [CoinSolution(coin, full_puzzle, fullsol)]
         # sign for AGG_SIG_ME
-        message = coin.puzzle_hash + coin.name() + \
-            did_wallet.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA
+        message = coin.puzzle_hash + coin.name() + did_wallet.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA
         pubkey = did_wallet_puzzles.get_pubkey_from_innerpuz(innerpuz)
         index = await did_wallet.wallet_state_manager.puzzle_store.index_for_pubkey(pubkey)
-        private = master_sk_to_wallet_sk(
-            did_wallet.wallet_state_manager.private_key, index)
+        private = master_sk_to_wallet_sk(did_wallet.wallet_state_manager.private_key, index)
         signature = AugSchemeMPL.sign(private, message)
         sigs = [signature]
         aggsig = AugSchemeMPL.aggregate(sigs)

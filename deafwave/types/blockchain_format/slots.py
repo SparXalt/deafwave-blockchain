@@ -12,11 +12,9 @@ from deafwave.util.streamable import Streamable, streamable
 
 @dataclass(frozen=True)
 @streamable
-# The hash of this is used as the challenge_hash for the ICC VDF
-class ChallengeBlockInfo(Streamable):
+class ChallengeBlockInfo(Streamable):  # The hash of this is used as the challenge_hash for the ICC VDF
     proof_of_space: ProofOfSpace
-    # Only present if not the first sp
-    challenge_chain_sp_vdf: Optional[VDFInfo]
+    challenge_chain_sp_vdf: Optional[VDFInfo]  # Only present if not the first sp
     challenge_chain_sp_signature: G2Element
     challenge_chain_ip_vdf: VDFInfo
 
@@ -25,14 +23,10 @@ class ChallengeBlockInfo(Streamable):
 @streamable
 class ChallengeChainSubSlot(Streamable):
     challenge_chain_end_of_slot_vdf: VDFInfo
-    # Only at the end of a slot
-    infused_challenge_chain_sub_slot_hash: Optional[bytes32]
-    # Only once per sub-epoch, and one sub-epoch delayed
-    subepoch_summary_hash: Optional[bytes32]
-    # Only at the end of epoch, sub-epoch, and slot
-    new_sub_slot_iters: Optional[uint64]
-    # Only at the end of epoch, sub-epoch, and slot
-    new_difficulty: Optional[uint64]
+    infused_challenge_chain_sub_slot_hash: Optional[bytes32]  # Only at the end of a slot
+    subepoch_summary_hash: Optional[bytes32]  # Only once per sub-epoch, and one sub-epoch delayed
+    new_sub_slot_iters: Optional[uint64]  # Only at the end of epoch, sub-epoch, and slot
+    new_difficulty: Optional[uint64]  # Only at the end of epoch, sub-epoch, and slot
 
 
 @dataclass(frozen=True)

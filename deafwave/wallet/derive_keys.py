@@ -16,6 +16,7 @@ def _derive_path(sk: PrivateKey, path: List[int]) -> PrivateKey:
         sk = AugSchemeMPL.derive_child_sk(sk, index)
     return sk
 
+
 # For OG plots, we must leave this as 8444 instead of 8620
 
 

@@ -50,8 +50,7 @@ class TestRLWallet:
 
         api_user = WalletRpcApi(wallet_node_1)
         val = await api_user.create_new_wallet(
-            {"wallet_type": "rl_wallet", "rl_type": "user",
-                "host": f"{self_hostname}:5000"}
+            {"wallet_type": "rl_wallet", "rl_type": "user", "host": f"{self_hostname}:5000"}
         )
         assert isinstance(val, dict)
         if "success" in val:
@@ -126,8 +125,7 @@ class TestRLWallet:
                 return False
             for _, mis, _ in val["transaction"].sent_to:
                 if (
-                    MempoolInclusionStatus(
-                        mis) == MempoolInclusionStatus.SUCCESS
+                    MempoolInclusionStatus(mis) == MempoolInclusionStatus.SUCCESS
                     or MempoolInclusionStatus(mis) == MempoolInclusionStatus.PENDING
                 ):
                     return True

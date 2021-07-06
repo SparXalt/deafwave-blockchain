@@ -41,13 +41,11 @@ class Timelord:
         self.root_path = root_path
         self.constants = constants
         self._shut_down = False
-        self.free_clients: List[Tuple[str,
-                                      asyncio.StreamReader, asyncio.StreamWriter]] = []
+        self.free_clients: List[Tuple[str, asyncio.StreamReader, asyncio.StreamWriter]] = []
         self.potential_free_clients: List = []
         self.ip_whitelist = self.config["vdf_clients"]["ip"]
         self.server: Optional[DeafwaveServer] = None
-        self.chain_type_to_stream: Dict[Chain, Tuple[str,
-                                                     asyncio.StreamReader, asyncio.StreamWriter]] = {}
+        self.chain_type_to_stream: Dict[Chain, Tuple[str, asyncio.StreamReader, asyncio.StreamWriter]] = {}
         self.chain_start_time: Dict = {}
         # Chains that currently don't have a vdf_client.
         self.unspawned_chains: List[Chain] = [
@@ -63,8 +61,7 @@ class Timelord:
         self.new_subslot_end: Optional[EndOfSubSlotBundle] = None
         # Last state received. Can either be a new peak or a new EndOfSubslotBundle.
         # Unfinished block info, iters adjusted to the last peak.
-        self.unfinished_blocks: List[timelord_protocol.NewUnfinishedBlockTimelord] = [
-        ]
+        self.unfinished_blocks: List[timelord_protocol.NewUnfinishedBlockTimelord] = []
         # Signage points iters, adjusted to the last peak.
         self.signage_point_iters: List[Tuple[uint64, uint8]] = []
         # For each chain, send those info when the process spawns.
@@ -76,8 +73,7 @@ class Timelord:
         # List of proofs finished.
         self.proofs_finished: List[Tuple[Chain, VDFInfo, VDFProof, int]] = []
         # Data to send at vdf_client initialization.
-        self.overflow_blocks: List[timelord_protocol.NewUnfinishedBlockTimelord] = [
-        ]
+        self.overflow_blocks: List[timelord_protocol.NewUnfinishedBlockTimelord] = []
         # Incremented each time `reset_chains` has been called.
         # Used to label proofs in `finished_proofs` and to only filter proofs corresponding to the most recent state.
         self.num_resets: int = 0
@@ -93,8 +89,7 @@ class Timelord:
         self.total_infused: int = 0
         self.state_changed_callback: Optional[Callable] = None
         self.sanitizer_mode = self.config["sanitizer_mode"]
-        self.pending_bluebox_info: List[timelord_protocol.RequestCompactProofOfTime] = [
-        ]
+        self.pending_bluebox_info: List[timelord_protocol.RequestCompactProofOfTime] = []
         self.last_active_time = time.time()
 
     async def _start(self):
@@ -108,8 +103,7 @@ class Timelord:
         if not self.sanitizer_mode:
             self.main_loop = asyncio.create_task(self._manage_chains())
         else:
-            self.main_loop = asyncio.create_task(
-                self._manage_discriminant_queue_sanitizer())
+            self.main_loop = asyncio.create_task(self._manage_discriminant_queue_sanitizer())
         log.info("Started timelord.")
 
     def _close(self):
@@ -185,8 +179,7 @@ class Timelord:
                 found_index = index
                 break
         if found_index == -1:
-            log.warning(
-                f"Will not infuse {block.rc_prev} because its reward chain challenge is not in the chain")
+            log.warning(f"Will not infuse {block.rc_prev} because its reward chain challenge is not in the chain")
             return None
         if ip_iters > block_ip_iters:
             log.warning("Too late to infuse block")
@@ -224,8 +217,7 @@ class Timelord:
                 await self._stop_chain(chain)
 
         # Adjust all signage points iterations to the peak.
-        iters_per_signage = uint64(
-            sub_slot_iters // self.constants.NUM_SPS_SUB_SLOT)
+        iters_per_signage = uint64(sub_slot_iters // self.constants.NUM_SPS_SUB_SLOT)
         self.signage_point_iters = [
             (k * iters_per_signage - ip_iters, k)
             for k in range(1, self.constants.NUM_SPS_SUB_SLOT)
@@ -245,8 +237,7 @@ class Timelord:
         self.iteration_to_proof_type = {}
         if not only_eos:
             for block in self.unfinished_blocks + self.overflow_blocks:
-                new_block_iters: Optional[uint64] = self._can_infuse_unfinished_block(
-                    block)
+                new_block_iters: Optional[uint64] = self._can_infuse_unfinished_block(block)
                 # Does not add duplicates, or blocks that we cannot infuse
                 if new_block_iters and new_block_iters not in self.iters_to_submit[Chain.CHALLENGE_CHAIN]:
                     if block not in self.unfinished_blocks:
@@ -255,8 +246,7 @@ class Timelord:
                     for chain in [Chain.REWARD_CHAIN, Chain.CHALLENGE_CHAIN]:
                         self.iters_to_submit[chain].append(new_block_iters)
                     if self.last_state.get_deficit() < self.constants.MIN_BLOCKS_PER_CHALLENGE_BLOCK:
-                        self.iters_to_submit[Chain.INFUSED_CHALLENGE_CHAIN].append(
-                            new_block_iters)
+                        self.iters_to_submit[Chain.INFUSED_CHALLENGE_CHAIN].append(new_block_iters)
                     self.iteration_to_proof_type[new_block_iters] = IterationType.INFUSION_POINT
         # Remove all unfinished blocks that have already passed.
         self.unfinished_blocks = new_unfinished_blocks
@@ -274,8 +264,7 @@ class Timelord:
         assert left_subslot_iters > 0
 
         if self.last_state.get_deficit() < self.constants.MIN_BLOCKS_PER_CHALLENGE_BLOCK:
-            self.iters_to_submit[Chain.INFUSED_CHALLENGE_CHAIN].append(
-                left_subslot_iters)
+            self.iters_to_submit[Chain.INFUSED_CHALLENGE_CHAIN].append(left_subslot_iters)
         self.iters_to_submit[Chain.CHALLENGE_CHAIN].append(left_subslot_iters)
         self.iters_to_submit[Chain.REWARD_CHAIN].append(left_subslot_iters)
         self.iteration_to_proof_type[left_subslot_iters] = IterationType.END_OF_SUBSLOT
@@ -307,8 +296,7 @@ class Timelord:
                     self.unfinished_blocks.remove(block)
                 if block in self.overflow_blocks:
                     self.overflow_blocks.remove(block)
-            infusion_rate = round(self.total_infused /
-                                  self.total_unfinished * 100.0, 2)
+            infusion_rate = round(self.total_infused / self.total_unfinished * 100.0, 2)
             log.info(
                 f"Total unfinished blocks: {self.total_unfinished}. "
                 f"Total infused blocks: {self.total_infused}. "
@@ -410,33 +398,27 @@ class Timelord:
                         rc_info = info
                         rc_proof = proof
                 if cc_info is None or cc_proof is None or rc_info is None or rc_proof is None:
-                    log.error(
-                        f"Insufficient signage point data {signage_iter}")
+                    log.error(f"Insufficient signage point data {signage_iter}")
                     continue
                 self.iters_finished.add(iter_to_look_for)
                 self.last_active_time = time.time()
 
-                rc_challenge = self.last_state.get_challenge(
-                    Chain.REWARD_CHAIN)
+                rc_challenge = self.last_state.get_challenge(Chain.REWARD_CHAIN)
                 if rc_info.challenge != rc_challenge:
                     assert rc_challenge is not None
-                    log.warning(
-                        f"SP: Do not have correct challenge {rc_challenge.hex()}" f" has {rc_info.challenge}")
+                    log.warning(f"SP: Do not have correct challenge {rc_challenge.hex()}" f" has {rc_info.challenge}")
                     # This proof is on an outdated challenge, so don't use it
                     continue
-                iters_from_sub_slot_start = cc_info.number_of_iterations + \
-                    self.last_state.get_last_ip()
+                iters_from_sub_slot_start = cc_info.number_of_iterations + self.last_state.get_last_ip()
                 response = timelord_protocol.NewSignagePointVDF(
                     signage_point_index,
-                    dataclasses.replace(
-                        cc_info, number_of_iterations=iters_from_sub_slot_start),
+                    dataclasses.replace(cc_info, number_of_iterations=iters_from_sub_slot_start),
                     cc_proof,
                     rc_info,
                     rc_proof,
                 )
                 if self.server is not None:
-                    msg = make_msg(
-                        ProtocolMessageTypes.new_signage_point_vdf, response)
+                    msg = make_msg(ProtocolMessageTypes.new_signage_point_vdf, response)
                     await self.server.send_to_all([msg], NodeType.FULL_NODE)
                 # Cleanup the signage point from memory.
                 to_remove.append((signage_iter, signage_point_index))
@@ -514,12 +496,10 @@ class Timelord:
                             icc_info = info
                             icc_proof = proof
                     if cc_info is None or cc_proof is None or rc_info is None or rc_proof is None:
-                        log.error(
-                            f"Insufficient VDF proofs for infusion point ch: {challenge} iterations:{iteration}")
+                        log.error(f"Insufficient VDF proofs for infusion point ch: {challenge} iterations:{iteration}")
                         return None
 
-                    rc_challenge = self.last_state.get_challenge(
-                        Chain.REWARD_CHAIN)
+                    rc_challenge = self.last_state.get_challenge(Chain.REWARD_CHAIN)
                     if rc_info.challenge != rc_challenge:
                         assert rc_challenge is not None
                         log.warning(
@@ -531,19 +511,15 @@ class Timelord:
 
                     self.iters_finished.add(iter_to_look_for)
                     self.last_active_time = time.time()
-                    log.debug(
-                        f"Generated infusion point for challenge: {challenge} iterations: {iteration}.")
+                    log.debug(f"Generated infusion point for challenge: {challenge} iterations: {iteration}.")
 
-                    overflow = is_overflow_block(
-                        self.constants, block.reward_chain_block.signage_point_index)
+                    overflow = is_overflow_block(self.constants, block.reward_chain_block.signage_point_index)
 
                     if not self.last_state.can_infuse_block(overflow):
-                        log.warning(
-                            "Too many blocks, or overflow in new epoch, cannot infuse, discarding")
+                        log.warning("Too many blocks, or overflow in new epoch, cannot infuse, discarding")
                         return None
 
-                    cc_info = dataclasses.replace(
-                        cc_info, number_of_iterations=ip_iters)
+                    cc_info = dataclasses.replace(cc_info, number_of_iterations=ip_iters)
                     response = timelord_protocol.NewInfusionPointVDF(
                         challenge,
                         cc_info,
@@ -553,8 +529,7 @@ class Timelord:
                         icc_info,
                         icc_proof,
                     )
-                    msg = make_msg(
-                        ProtocolMessageTypes.new_infusion_point_vdf, response)
+                    msg = make_msg(ProtocolMessageTypes.new_infusion_point_vdf, response)
                     if self.server is not None:
                         await self.server.send_to_all([msg], NodeType.FULL_NODE)
 
@@ -592,8 +567,7 @@ class Timelord:
                         return None
 
                     new_reward_chain_block = RewardChainBlock(
-                        uint128(self.last_state.get_weight() +
-                                block.difficulty),
+                        uint128(self.last_state.get_weight() + block.difficulty),
                         height,
                         uint128(ip_total_iters),
                         block.reward_chain_block.signage_point_index,
@@ -701,17 +675,14 @@ class Timelord:
             rc_challenge = self.last_state.get_challenge(Chain.REWARD_CHAIN)
             if rc_vdf.challenge != rc_challenge:
                 assert rc_challenge is not None
-                log.warning(
-                    f"Do not have correct challenge {rc_challenge.hex()} has" f" {rc_vdf.challenge}")
+                log.warning(f"Do not have correct challenge {rc_challenge.hex()} has" f" {rc_vdf.challenge}")
                 # This proof is on an outdated challenge, so don't use it
                 return None
             log.debug("Collected end of subslot vdfs.")
             self.iters_finished.add(iter_to_look_for)
             self.last_active_time = time.time()
-            iters_from_sub_slot_start = cc_vdf.number_of_iterations + \
-                self.last_state.get_last_ip()
-            cc_vdf = dataclasses.replace(
-                cc_vdf, number_of_iterations=iters_from_sub_slot_start)
+            iters_from_sub_slot_start = cc_vdf.number_of_iterations + self.last_state.get_last_ip()
+            cc_vdf = dataclasses.replace(cc_vdf, number_of_iterations=iters_from_sub_slot_start)
             if icc_ip_vdf is not None:
                 if self.last_state.peak is not None:
                     total_iters = (
@@ -720,29 +691,24 @@ class Timelord:
                         + self.last_state.get_sub_slot_iters()
                     )
                 else:
-                    total_iters = self.last_state.get_total_iters(
-                    ) + self.last_state.get_sub_slot_iters()
-                iters_from_cb = uint64(
-                    total_iters - self.last_state.last_challenge_sb_or_eos_total_iters)
+                    total_iters = self.last_state.get_total_iters() + self.last_state.get_sub_slot_iters()
+                iters_from_cb = uint64(total_iters - self.last_state.last_challenge_sb_or_eos_total_iters)
                 if iters_from_cb > self.last_state.sub_slot_iters:
                     log.error(f"{self.last_state.peak}")
                     log.error(f"{self.last_state.subslot_end}")
                     assert False
                 assert iters_from_cb <= self.last_state.sub_slot_iters
-                icc_ip_vdf = dataclasses.replace(
-                    icc_ip_vdf, number_of_iterations=iters_from_cb)
+                icc_ip_vdf = dataclasses.replace(icc_ip_vdf, number_of_iterations=iters_from_cb)
 
             icc_sub_slot: Optional[InfusedChallengeChainSubSlot] = (
-                None if icc_ip_vdf is None else InfusedChallengeChainSubSlot(
-                    icc_ip_vdf)
+                None if icc_ip_vdf is None else InfusedChallengeChainSubSlot(icc_ip_vdf)
             )
             if self.last_state.get_deficit() == 0:
                 assert icc_sub_slot is not None
                 icc_sub_slot_hash = icc_sub_slot.get_hash()
             else:
                 icc_sub_slot_hash = None
-            next_ses: Optional[SubEpochSummary] = self.last_state.get_next_sub_epoch_summary(
-            )
+            next_ses: Optional[SubEpochSummary] = self.last_state.get_next_sub_epoch_summary()
             if next_ses is not None:
                 log.info(f"Including sub epoch summary{next_ses}")
                 ses_hash = next_ses.get_hash()
@@ -752,8 +718,7 @@ class Timelord:
                 ses_hash = None
                 new_sub_slot_iters = None
                 new_difficulty = None
-            cc_sub_slot = ChallengeChainSubSlot(
-                cc_vdf, icc_sub_slot_hash, ses_hash, new_sub_slot_iters, new_difficulty)
+            cc_sub_slot = ChallengeChainSubSlot(cc_vdf, icc_sub_slot_hash, ses_hash, new_sub_slot_iters, new_difficulty)
             eos_deficit: uint8 = (
                 self.last_state.get_deficit()
                 if self.constants.MIN_BLOCKS_PER_CHALLENGE_BLOCK > self.last_state.get_deficit() > 0
@@ -820,8 +785,7 @@ class Timelord:
             # Signage points should be every 9 seconds
             active_time_threshold = 60
         if time.time() - self.last_active_time > active_time_threshold:
-            log.error(
-                f"Not active for {active_time_threshold} seconds, restarting all chains")
+            log.error(f"Not active for {active_time_threshold} seconds, restarting all chains")
             await self._reset_chains()
 
     async def _manage_chains(self):
@@ -877,8 +841,7 @@ class Timelord:
         # Labels a proof to the current state only
         proof_label: Optional[int] = None,
     ):
-        disc: int = create_discriminant(
-            challenge, self.constants.DISCRIMINANT_SIZE_BITS)
+        disc: int = create_discriminant(challenge, self.constants.DISCRIMINANT_SIZE_BITS)
 
         try:
             # Depending on the flags 'fast_algorithm' and 'sanitizer_mode',
@@ -906,8 +869,7 @@ class Timelord:
 
             # Send initial_form prefixed with its length.
             async with self.lock:
-                writer.write(
-                    bytes([len(initial_form.data)]) + initial_form.data)
+                writer.write(bytes([len(initial_form.data)]) + initial_form.data)
                 await writer.drain()
             try:
                 ok = await reader.readexactly(2)
@@ -967,8 +929,7 @@ class Timelord:
                         # This must be a proof, 4 bytes is length prefix
                         length = int.from_bytes(data, "big")
                         proof = await reader.readexactly(length)
-                        stdout_bytes_io: io.BytesIO = io.BytesIO(
-                            bytes.fromhex(proof.decode()))
+                        stdout_bytes_io: io.BytesIO = io.BytesIO(bytes.fromhex(proof.decode()))
                     except (
                         asyncio.IncompleteReadError,
                         ConnectionResetError,
@@ -980,16 +941,13 @@ class Timelord:
                             self.vdf_failures_count += 1
                         break
 
-                    iterations_needed = uint64(int.from_bytes(
-                        stdout_bytes_io.read(8), "big", signed=True))
+                    iterations_needed = uint64(int.from_bytes(stdout_bytes_io.read(8), "big", signed=True))
 
                     y_size_bytes = stdout_bytes_io.read(8)
-                    y_size = uint64(int.from_bytes(
-                        y_size_bytes, "big", signed=True))
+                    y_size = uint64(int.from_bytes(y_size_bytes, "big", signed=True))
 
                     y_bytes = stdout_bytes_io.read(y_size)
-                    witness_type = uint8(int.from_bytes(
-                        stdout_bytes_io.read(1), "big", signed=True))
+                    witness_type = uint8(int.from_bytes(stdout_bytes_io.read(1), "big", signed=True))
                     proof_bytes: bytes = stdout_bytes_io.read()
 
                     # Verifies our own proof just in case
@@ -1020,8 +978,7 @@ class Timelord:
                     if not self.sanitizer_mode:
                         async with self.lock:
                             assert proof_label is not None
-                            self.proofs_finished.append(
-                                (chain, vdf_info, vdf_proof, proof_label))
+                            self.proofs_finished.append((chain, vdf_info, vdf_proof, proof_label))
                     else:
                         async with self.lock:
                             writer.write(b"010")
@@ -1033,8 +990,7 @@ class Timelord:
                             vdf_info, vdf_proof, header_hash, height, field_vdf
                         )
                         if self.server is not None:
-                            message = make_msg(
-                                ProtocolMessageTypes.respond_compact_proof_of_time, response)
+                            message = make_msg(ProtocolMessageTypes.respond_compact_proof_of_time, response)
                             await self.server.send_to_all([message], NodeType.FULL_NODE)
         except ConnectionResetError as e:
             log.debug(f"Connection reset with VDF client {e}")
@@ -1049,8 +1005,7 @@ class Timelord:
                         # CC_EOS and ICC_EOS. This guarantees everything is picked uniformly.
                         target_field_vdf = random.randint(1, 4)
                         info = next(
-                            (info for info in self.pending_bluebox_info if info.field_vdf ==
-                             target_field_vdf),
+                            (info for info in self.pending_bluebox_info if info.field_vdf == target_field_vdf),
                             None,
                         )
                         if info is None:
