@@ -64,11 +64,8 @@ class TestCCWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks - 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks - 1)]
         )
 
         await time_out_assert(15, wallet.get_confirmed_balance, funds)
@@ -105,11 +102,8 @@ class TestCCWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks - 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks - 1)]
         )
 
         await time_out_assert(15, wallet.get_confirmed_balance, funds)
@@ -181,11 +175,8 @@ class TestCCWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks - 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks - 1)]
         )
 
         await time_out_assert(15, wallet.get_confirmed_balance, funds)
@@ -217,11 +208,8 @@ class TestCCWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks - 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks - 1)]
         )
         await time_out_assert(15, wallet.get_confirmed_balance, funds)
 
@@ -278,11 +266,8 @@ class TestCCWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks - 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks - 1)]
         )
 
         await time_out_assert(15, wallet.get_confirmed_balance, funds)
@@ -359,11 +344,8 @@ class TestCCWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks - 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks - 1)]
         )
 
         await time_out_assert(15, wallet_0.get_confirmed_balance, funds)
@@ -458,11 +440,8 @@ class TestCCWallet:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         funds = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks - 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks - 1)]
         )
 
         await time_out_assert(15, wallet.get_confirmed_balance, funds)

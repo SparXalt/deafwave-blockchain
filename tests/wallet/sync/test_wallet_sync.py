@@ -166,8 +166,7 @@ class TestWalletSync:
 
         # Confirm we have the funds
         funds = sum(
-            [calculate_pool_reward(uint32(
-                i)) + calculate_base_farmer_reward(uint32(i)) for i in range(1, num_blocks)]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i)) for i in range(1, num_blocks)]
         )
 
         await time_out_assert(5, wallet.get_confirmed_balance, funds)
@@ -232,9 +231,8 @@ class TestWalletSync:
         await disconnect_all_and_reconnect(server_2, fn_server)
 
         # Confirm we have the funds
-        funds = calculate_pool_reward(uint32(len(blocks_reorg_1))) + calculate_base_farmer_reward(
-            uint32(len(blocks_reorg_1))
-        )
+        funds = calculate_pool_reward(uint32(len(blocks_reorg_1))) + \
+            calculate_base_farmer_reward(uint32(len(blocks_reorg_1)))
 
         await time_out_assert(10, get_tx_count, 2, 1)
         await time_out_assert(10, wallet.get_confirmed_balance, funds)

@@ -49,15 +49,11 @@ class TestWalletRpc:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(ph))
 
         initial_funds = sum(
-            [calculate_pool_reward(uint32(
-                i)) + calculate_base_farmer_reward(uint32(i)) for i in range(1, num_blocks)]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i)) for i in range(1, num_blocks)]
         )
         initial_funds_eventually = sum(
-            [
-                calculate_pool_reward(uint32(i)) +
-                calculate_base_farmer_reward(uint32(i))
-                for i in range(1, num_blocks + 1)
-            ]
+            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+             for i in range(1, num_blocks + 1)]
         )
 
         wallet_rpc_api = WalletRpcApi(wallet_node)
