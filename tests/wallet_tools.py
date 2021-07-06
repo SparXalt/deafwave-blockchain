@@ -58,7 +58,7 @@ class WalletTool:
                 pubkey = master_sk_to_wallet_sk(self.private_key, uint32(child)).get_g1()
                 if puzzle_hash == puzzle_for_pk(bytes(pubkey)).get_tree_hash():
                     return master_sk_to_wallet_sk(self.private_key, uint32(child))
-        raise ValueError(f"Do not have the keys for puzzle hash {puzzle_hash}")
+        raise ValueError(f"Do not have the keys for puzzle hash {puzzle_hash}") # TODO: Ubuntu core/Ubuntu blockchain Test: ValueError: Do not have the keys for puzzle hash 95c259eaf17836095a7bfb5b1254b53c554985364c349f4a6764787c21d425ad
 
     def puzzle_for_pk(self, pubkey: bytes) -> Program:
         return puzzle_for_pk(pubkey)
@@ -121,7 +121,7 @@ class WalletTool:
         for n, coin in enumerate(coins):
             puzzle_hash = coin.puzzle_hash
             if secret_key is None:
-                secret_key = self.get_private_key_for_puzzle_hash(puzzle_hash)
+                secret_key = self.get_private_key_for_puzzle_hash(puzzle_hash) # TODO: FIX THIS ERROR
             pubkey = secret_key.get_g1()
             puzzle = puzzle_for_pk(bytes(pubkey))
             if n == 0:

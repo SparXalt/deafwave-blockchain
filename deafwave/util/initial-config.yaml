@@ -31,12 +31,12 @@ network_overrides: &network_overrides
   config:
     mainnet:
       address_prefix: "zzz"
-      default_full_node_port: 8620
+      default_full_node_port: 8621
     testnet0:
       address_prefix: "tzzz"
     testnet3:
       address_prefix: "tzzz"
-      default_full_node_port: 58620
+      default_full_node_port: 58621
 
 selected_network: &selected_network "mainnet"
 ALERTS_URL: https://storage.googleapis.com/download.deafwave.net/notify/testnet_alert3.txt
@@ -70,10 +70,10 @@ logging: &logging
 
 harvester:
   # The harvester server (if run) will run on this port
-  port: 8624
+  port: 8625
   farmer_peer:
     host: *self_hostname
-    port: 8623
+    port: 8624
 
   # If True, starts an RPC server at the following port
   start_rpc_server: True
@@ -110,14 +110,14 @@ pool:
 
 farmer:
   # The farmer server (if run) will run on this port
-  port: 8623
+  port: 8624
   # The farmer will attempt to connect to this full node and harvester
   full_node_peer:
     host: *self_hostname
-    port: 8620
+    port: 8621
   harvester_peer:
     host: *self_hostname
-    port: 8624
+    port: 8625
 
   pool_public_keys: []
 
@@ -151,7 +151,7 @@ timelord_launcher:
 
 timelord:
   # The timelord server (if run) will run on this port
-  port: 8622
+  port: 8623
   # Provides a list of VDF clients expected to connect to this timelord.
   # For each client, an IP is provided, together with the estimated iterations per second.
   vdf_clients:
@@ -163,7 +163,7 @@ timelord:
       - 150000
   full_node_peer:
       host: *self_hostname
-      port: 8620
+      port: 8621
   # Maximum number of seconds allowed for a client to reconnect to the server.
   max_connection_time: 60
   # The ip and port where the TCP clients will connect.
@@ -198,7 +198,7 @@ timelord:
 
 full_node:
   # The full node server (if run) will run on this port
-  port: 8620
+  port: 8621
 
   # Run multiple nodes with different databases by changing the database_path
   database_path: db/blockchain_v1_CHALLENGE.sqlite
@@ -256,16 +256,16 @@ full_node:
     - "dns-introducer.deafwave.net"
   farmer_peer:
       host: *self_hostname
-      port: 8623
+      port: 8624
   timelord_peer:
       host: *self_hostname
-      port: 8622
+      port: 8623
   introducer_peer:
       host: introducer.deafwave.net  # Deafwave AWS introducer IPv4/IPv6
-      port: 8620
+      port: 8621
   wallet_peer:
     host: *self_hostname
-    port: 8625
+    port: 8626
   logging: *logging
   network_overrides: *network_overrides
   selected_network: *selected_network
@@ -299,7 +299,7 @@ ui:
 
 introducer:
   host: *self_hostname
-  port: 8621
+  port: 8622
   max_peers_to_send: 20
   # The introducer will only return peers who it has seen in the last
   # recent_peer_threshold seconds
@@ -313,7 +313,7 @@ introducer:
     public_key:  "config/ssl/full_node/public_full_node.key"
 
 wallet:
-  port: 8625
+  port: 8626
   rpc_port: 9432
 
   enable_profiler: False
@@ -328,7 +328,7 @@ wallet:
 
   full_node_peer:
     host: *self_hostname
-    port: 8620
+    port: 8621
 
   testing: False
   database_path: wallet/db/blockchain_wallet_v1_CHALLENGE_KEY.sqlite
@@ -346,7 +346,7 @@ wallet:
 
   introducer_peer:
     host: introducer.deafwave.net # Deafwave AWS introducer IPv4/IPv6
-    port: 8620
+    port: 8621
 
   ssl:
     private_crt:  "config/ssl/wallet/private_wallet.crt"
