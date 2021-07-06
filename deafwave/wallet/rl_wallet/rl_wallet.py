@@ -338,8 +338,7 @@ class RLWallet:
         height = peak.height if peak else 0
         assert self.rl_info.limit is not None
         unlocked = int(
-            ((height - self.rl_coin_record.confirmed_block_height) /
-             self.rl_info.interval) * int(self.rl_info.limit)
+            ((height - self.rl_coin_record.confirmed_block_height) / self.rl_info.interval) * int(self.rl_info.limit)
         )
         total_amount = self.rl_coin_record.coin.amount
         available_amount = min(unlocked, total_amount)

@@ -395,8 +395,7 @@ class TestPeerManager:
         buckets = []
         for i in range(4 * 255):
             src = PeerInfo("251.4.1.1", 8620)
-            peer = PeerInfo(str(250 + i // 255) + "." +
-                            str(i % 256) + ".1.1", 8620)
+            peer = PeerInfo(str(250 + i // 255) + "." + str(i % 256) + ".1.1", 8620)
             t_peer = TimestampedPeerInfo(
                 str(250 + i // 255) + "." + str(i % 256) + ".1.1", 8620, 0)
             extended_peer_info = ExtendedPeerInfo(t_peer, src)

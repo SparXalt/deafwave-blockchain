@@ -129,7 +129,8 @@ class TestTransactions:
             await full_node_api_1.farm_new_transaction_block(FarmNewBlockProtocol(token_bytes()))
         funds = sum(
             [
-                calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i)) for i in range(1, num_blocks + 1)
+                calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+                for i in range(1, num_blocks + 1)
             ]
         )
         print(f"Funds: {funds}")

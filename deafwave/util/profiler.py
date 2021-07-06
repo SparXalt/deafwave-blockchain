@@ -102,8 +102,7 @@ if __name__ == "__main__":
 
                 quantized = int(percent // 2)
                 print(
-                    ("%05d: " + color + "%3.0f%% CPU " +
-                     Back.WHITE + "%s" + Style.RESET_ALL + "%s|")
+                    ("%05d: " + color + "%3.0f%% CPU " + Back.WHITE + "%s" + Style.RESET_ALL + "%s|")
                     % (counter, percent, " " * quantized, " " * (50 - quantized))
                 )
 

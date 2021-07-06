@@ -188,8 +188,7 @@ class TestWalletRpc:
                 await asyncio.sleep(0.5)
 
             await time_out_assert(
-                5, eventual_balance, initial_funds_eventually -
-                tx_amount - signed_tx_amount - 444 - 999 - 100
+                5, eventual_balance, initial_funds_eventually - tx_amount - signed_tx_amount - 444 - 999 - 100
             )
 
             address = await client.get_next_address("1", True)

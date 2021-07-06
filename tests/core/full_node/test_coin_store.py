@@ -6,7 +6,8 @@ from typing import List, Optional, Set, Tuple
 import aiosqlite
 import pytest
 
-from deafwave.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward, calculate_postfarm_reward
+from deafwave.consensus.block_rewards import calculate_base_farmer_reward, \
+    calculate_pool_reward, calculate_postfarm_reward
 from deafwave.consensus.blockchain import Blockchain, ReceiveBlockResult
 from deafwave.consensus.coinbase import create_farmer_coin, create_pool_coin, create_postfarm_coin
 from deafwave.full_node.block_store import BlockStore

@@ -314,8 +314,7 @@ class DIDWallet:
                 output_str = output_str + did.hex() + ","
             output_str = output_str[:-1]
             output_str = (
-                output_str +
-                f":{bytes(self.did_info.current_inner).hex()}:{self.did_info.num_of_backup_ids_needed}"
+                output_str + f":{bytes(self.did_info.current_inner).hex()}:{self.did_info.num_of_backup_ids_needed}"
             )
             f.write(output_str)
             f.close()

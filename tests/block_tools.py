@@ -26,9 +26,11 @@ from deafwave.full_node.mempool_check_conditions import GENERATOR_MOD
 from deafwave.plotting.create_plots import create_plots
 from deafwave.consensus.block_creation import unfinished_block_to_full_block
 from deafwave.consensus.block_record import BlockRecord
-from deafwave.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward, calculate_postfarm_reward
+from deafwave.consensus.block_rewards import \
+    calculate_base_farmer_reward, calculate_pool_reward, calculate_postfarm_reward
 from deafwave.consensus.blockchain_interface import BlockchainInterface
-from deafwave.consensus.coinbase import create_postfarm_coin, create_puzzlehash_for_pk, create_farmer_coin, create_pool_coin
+from deafwave.consensus.coinbase import \
+    create_postfarm_coin, create_puzzlehash_for_pk, create_farmer_coin, create_pool_coin
 from deafwave.consensus.constants import ConsensusConstants
 from deafwave.consensus.default_constants import DEFAULT_CONSTANTS
 from deafwave.consensus.deficit import calculate_deficit
@@ -47,7 +49,8 @@ from deafwave.full_node.signage_point import SignagePoint
 from deafwave.plotting.plot_tools import PlotInfo, load_plots, parse_plot_info
 from deafwave.types.blockchain_format.classgroup import ClassgroupElement
 from deafwave.types.blockchain_format.coin import Coin, hash_coin_list
-from deafwave.types.blockchain_format.foliage import Foliage, FoliageBlockData, FoliageTransactionBlock, TransactionsInfo
+from deafwave.types.blockchain_format.foliage import \
+    Foliage, FoliageBlockData, FoliageTransactionBlock, TransactionsInfo
 from deafwave.types.blockchain_format.pool_target import PoolTarget
 from deafwave.types.blockchain_format.proof_of_space import ProofOfSpace
 from deafwave.types.blockchain_format.reward_chain_block import RewardChainBlockUnfinished
@@ -1088,13 +1091,9 @@ def get_signage_point(
 ) -> SignagePoint:
     if signage_point_index == 0:
         return SignagePoint(None, None, None, None)
-    sp_iters = calculate_sp_iters(
-        constants, sub_slot_iters, signage_point_index)
+    sp_iters = calculate_sp_iters(constants, sub_slot_iters, signage_point_index)
     overflow = is_overflow_block(constants, signage_point_index)
-    sp_total_iters = uint128(
-        sub_slot_start_total_iters +
-        calculate_sp_iters(constants, sub_slot_iters, signage_point_index)
-    )
+    sp_total_iters = uint128(sub_slot_start_total_iters + calculate_sp_iters(constants, sub_slot_iters, signage_point_index))
 
     (
         cc_vdf_challenge,
@@ -1193,8 +1192,7 @@ def finish_block(
         finished_sub_slots,
         latest_block,
         blocks,
-        uint128(sub_slot_start_total_iters +
-                sub_slot_iters) if is_overflow else sub_slot_start_total_iters,
+        uint128(sub_slot_start_total_iters + sub_slot_iters) if is_overflow else sub_slot_start_total_iters,
         deficit,
     )
 
@@ -1205,10 +1203,7 @@ def finish_block(
         new_ip_iters,
     )
     assert unfinished_block is not None
-    sp_total_iters = uint128(
-        sub_slot_start_total_iters +
-        calculate_sp_iters(constants, sub_slot_iters, signage_point_index)
-    )
+    sp_total_iters = uint128( sub_slot_start_total_iters + calculate_sp_iters(constants, sub_slot_iters, signage_point_index))
     full_block: FullBlock = unfinished_block_to_full_block(
         unfinished_block,
         cc_ip_vdf,

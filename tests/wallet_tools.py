@@ -159,10 +159,8 @@ class WalletTool:
         solution: Program
         puzzle: Program
         for coin_solution in coin_solutions:  # type: ignore # noqa
-            secret_key = self.get_private_key_for_puzzle_hash(
-                coin_solution.coin.puzzle_hash)
-            synthetic_secret_key = calculate_synthetic_secret_key(
-                secret_key, DEFAULT_HIDDEN_PUZZLE_HASH)
+            secret_key = self.get_private_key_for_puzzle_hash(coin_solution.coin.puzzle_hash)
+            synthetic_secret_key = calculate_synthetic_secret_key(secret_key, DEFAULT_HIDDEN_PUZZLE_HASH)
             err, con, cost = conditions_for_solution(
                 coin_solution.puzzle_reveal, coin_solution.solution, self.constants.MAX_BLOCK_COST_CLVM
             )
@@ -171,8 +169,7 @@ class WalletTool:
             conditions_dict = conditions_by_opcode(con)
 
             for _, msg in pkm_pairs_for_conditions_dict(
-                conditions_dict, bytes(coin_solution.coin.name(
-                )), self.constants.AGG_SIG_ME_ADDITIONAL_DATA
+                conditions_dict, bytes(coin_solution.coin.name()), self.constants.AGG_SIG_ME_ADDITIONAL_DATA
             ):
                 signature = AugSchemeMPL.sign(synthetic_secret_key, msg)
                 signatures.append(signature)
@@ -190,8 +187,7 @@ class WalletTool:
     ) -> SpendBundle:
         if condition_dic is None:
             condition_dic = {}
-        transaction = self.generate_unsigned_transaction(
-            amount, new_puzzle_hash, [coin], condition_dic, fee)
+        transaction = self.generate_unsigned_transaction(amount, new_puzzle_hash, [coin], condition_dic, fee)
         assert transaction is not None
         return self.sign_transaction(transaction)
 
@@ -205,7 +201,6 @@ class WalletTool:
     ) -> SpendBundle:
         if condition_dic is None:
             condition_dic = {}
-        transaction = self.generate_unsigned_transaction(
-            amount, new_puzzle_hash, coins, condition_dic, fee)
+        transaction = self.generate_unsigned_transaction(amount, new_puzzle_hash, coins, condition_dic, fee)
         assert transaction is not None
         return self.sign_transaction(transaction)
